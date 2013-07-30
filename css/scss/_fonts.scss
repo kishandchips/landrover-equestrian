@@ -1,0 +1,13 @@
+@mixin arial {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.arial {
+	@include arial;
+}
+
+@mixin crimson {
+	font-family: 'Crimson Text', TimesNewRoman, 'Times New Roman', Times, Baskerville, Georgia, serif;
+	font-weight: 400;
+	font-style: normal;
+}
