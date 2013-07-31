@@ -46,7 +46,7 @@
 		wp_enqueue_script('imagesloaded', get_template_directory_uri().'/js/plugins/jquery.imagesloaded.js', array('jquery'), '', true);
 		wp_enqueue_script('transit', get_template_directory_uri().'/js/plugins/jquery.transit.js', array('jquery'), '', true);
 		wp_register_script('fancybox', get_template_directory_uri().'/js/plugins/jquery.fancybox.min.js', array('jquery'), '', true);
-		wp_register_script('threesixty', get_template_directory_uri().'/js/plugins/jquery.threesixty.js', array('jquery'), '', true);
+		wp_register_script('accordion', get_template_directory_uri().'/js/plugins/jquery.accordion.js', array('jquery'), '', true);
 		wp_enqueue_script('main', get_template_directory_uri().'/js/main.js', array('jquery'), '', true);
 
 		wp_deregister_script('wc-add-to-cart-variation');
@@ -64,18 +64,20 @@
 		<div class="inner container">
 			<h1 class="logo-container">
 				<a class="logo" href="<?php echo home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+				<?php if(!is_front_page()): ?>
+				<span class="description">
+					<?php _e("Supporting<br />British Equestrian", THEME_NAME); ?>
+				</span>
+				<?php endif; ?>
 			</h1>
-			
+			<?php if(!is_front_page()): ?>
 			<div class="navigation-container">
-				<a href="<?php echo get_permalink(get_landrover_option('cart_page_id')); ?>" class="cart-btn" >
-					<i aria-hidden="true" class="icon-shopping-bag"></i>&nbsp;&nbsp;<?php echo get_the_title(get_landrover_option('cart_page_id')); ?>:
-					<strong class="items"><?php echo sprintf(_n('%d Bear', '%d Bears', $woocommerce->cart->cart_contents_count, 'woothemes'), $woocommerce->cart->cart_contents_count);?></strong>
-				</a>
 				<button class="mobile-navigation-btn uppercase">menu <i aria-hidden="true" class="icon-arrow-down tiny"></i></button>
 				<nav role="navigation" class="site-navigation main-navigation">
 					<?php wp_nav_menu( array( 'theme_location' => 'primary_header', 'menu_class' => 'clearfix menu', 'container' => false ) ); ?>
 				</nav><!-- .site-navigation .main-navigation -->
 			</div>
+			<?php endif; ?>
 		</div>
 	</header><!-- #header -->
 	<div id="main" class="site-main" role="main">

@@ -35,60 +35,52 @@
 	background-color: #f0f0f0;
 }
 
+.grey-gradient-bg {
+	@include background(linear-gradient(#f3f3f3, #d5d5d5));
+}
+
 /* =============================================================================
    Text
    ========================================================================== */
 
 a {
 	text-decoration: none;
-	color: #850000;
+	color: #df5206;
 	cursor: pointer;
 	@include transition(all 0.3s ease);
 	&:hover {
-		color: #510000;
+		color: #a83e05;
 	}
 }
 
-
 h1 {
-	@include font-size(50);
+	@include landrover-medium;
+	@include font-size(40);
 	line-height: 0.9;
 	margin: 0.3em 0;
 	text-transform: uppercase;
-
-	&:before {
-		font-size: 70%;
-	}
 }
 
 h2 {
 	margin: 0.5em 0;
-	@include font-size(40);
+	@include landrover-medium;
+	@include font-size(30);
 	line-height: 0.9;
 	text-transform: uppercase;
-	&:before {
-		font-size: 70%;
-	}
 }
 
 h3 {
 	margin: 0.5em 0;
-	@include font-size(30);
+	@include font-size(25);
 	line-height: 1.3;
 	text-transform: uppercase;
-	&:before {
-		font-size: 70%;
-	}
 }
 
 h4 {
 	margin: 0.5em 0;
-	@include font-size(22);
+	@include font-size(20);
 	line-height: 1.3;
 	text-transform: uppercase;
-	&:before {
-		font-size: 70%;
-	}
 }
 
 h5 {
@@ -96,22 +88,16 @@ h5 {
 	@include font-size(18);
 	line-height: 1.3;
 	text-transform: uppercase;
-	&:before {
-		font-size: 70%;
-	}
 }
 
 h6 {
 	margin: 0.5em 0;
 	@include font-size(16);
 	line-height: 1;
-	&:before {
-		font-size: 70%;
-	}
 }
 
 p {
-	margin: 0.8em 0;
+	margin: 1.2em 0;
 }
 
 .huge {
@@ -225,7 +211,7 @@ a.light-grey:hover {
 }
 
 .orange {
-	color: #d35c2a;	
+	color: #e05206;	
 }
 
 a.orange:hover {
@@ -237,7 +223,7 @@ a.orange:hover {
 }
 
 .blue {
-	color: #00a3e0;	
+	color: #061730;	
 }
 
 .dark-blue {
@@ -633,7 +619,76 @@ hr {
 	}
 }
 
+.divider {
+	position: relative;
+	z-index: 600;
+	@include box-shadow(0 4px 8px 1px #000);
+	padding: 1em;	
+}
 
+.accordion {
+	padding: 0;
+	margin: 0;
+	position: relative;
+	overflow: hidden;
+	list-style: none;
+	color: #FFF;
+	.item {
+		.btn {
+			@include transition(all 0.3s ease);
+			visibility: hidden;
+			@include apply-origin(12px 50%, false);
+			@include rotate(-90deg);
+			background: #FFF;
+			@include background(linear-gradient(color-stops(#f4f4f4, #f4f4f4 75%, #d7d7d7)));
+			width: 142px;
+			position: absolute;
+			top: 50%;
+			left: 8px;
+			margin-top: (142px / 2);
+			@include border-radius(0px 0px 3px 3px);
+			color: #e05206;
+			font-weight: bold;
+			text-transform: uppercase;
+			@include font-size(12);
+			opacity: 0;
+
+			&:hover {
+				background: #000;
+				color: #FFF;
+			}
+		}
+
+		&.item-closed .btn {
+			visibility: visible;
+			opacity: 1;
+		}
+
+		img {
+			max-width: 100%;
+			// position: absolute;
+			// top: 0;
+			// left: 50%;
+			// margin-left: -(600px / 2)
+			
+			.csstransforms & {
+				position: absolute;
+				top: 50%;
+				left: 0;
+				@include translateY(-50%);
+			}
+		}
+
+		.content {
+			position: absolute;
+			z-index: 400;
+			left: 3em;
+			top: 50%;
+			@include translateY(-50%);
+			width: 60%;
+		}
+	}
+}
 /* =============================================================================
    Widgets
    ========================================================================== */
@@ -671,7 +726,6 @@ hr {
 
 
 button {
-	@include crimson;
 	background: #FFF;
 	border: 0;
 	padding: 0.3em 0.8em;
@@ -680,6 +734,71 @@ button {
 		background: #ebebeb;
 	}
 }
+
+.blue-btn {
+	display: inline-block;
+	background: #253349;
+	@include background(linear-gradient(color-stops(#293c57, #23344d 10%, #203048 52%, #223148 53%, #071831)));
+	padding: 0.3em 1em;
+	color: #FFF;
+	@include font-size(20);
+	text-transform: uppercase;
+	@include landrover-medium;
+	@include border-radius(3px);
+	@include box-shadow(0 0 3px 1px rgba(#000, 0.5));
+	&:hover {
+		color: #e05206;
+		//@include box-shadow(0 0 3px 1px rgba(#000, 0.5), inset 0 0 3px 1px rgba(#FFF, 0.5));
+		//background: #1c2738;
+		//@include background(linear-gradient(color-stops(#192536, #172233 10%, #141e2e 52%, #161f2e 53%, #030b17)));
+	}
+}
+
+.white-btn {
+	display: inline-block;
+	color: #e05206;
+	padding: 0.9em 4em 0.7em 1.5em;
+	background: #f7f7f7;
+	@include border-radius(3px);
+	@include font-size(10);
+	position: relative;
+	font-weight: bold;
+	text-transform: uppercase;
+	@include box-shadow(0 0 3px 1px rgba(#000, 0.5));
+	&:before {
+		@extend [data-icon]:before;
+		@extend .icon-arrow-right-small:before;
+		position: absolute;
+		right: 1.3em;
+		top: 50%;
+		margin-top: -4px;
+		font-size: 80%;
+	}
+
+	&:after {
+		content: '';
+		position: absolute;
+		height: 24px;
+		right: 2.6em;
+		top: 50%;
+		margin-top: -12px;
+		width: 1px;
+		background: #FFF;
+		border-left: 1px solid #dcdcdc;
+		@include transition(all 0.3s ease);
+	}
+
+	&:hover {
+		background: #000;
+		color: #FFF;
+
+		&:after {
+			background: #28303c;
+			border-left-color: #374252;
+		}
+	}
+}
+
 
 .overlay-btn {
 	position: relative;
@@ -716,13 +835,6 @@ button {
 	}
 }
 
-.move-up-btn {
-	position: relative;
-						
-	&:hover {
-		top: -0.5em;
-	}
-}
 
 .print-btn {
 	@media print {
@@ -733,19 +845,7 @@ button {
    Grid
    ========================================================================== */
 
-.row {	
-	padding-top: 1.6em;
-	padding-bottom: 1.6em;
-	border-bottom: 1px solid #cecece;
-
-	@include device-width(6) {
-		padding-top: 1em !important;
-		padding-bottom: 1em !important;
-	}
-	> .inner {
-		margin-left: -10px;
-		margin-right: -10px;
-	}
+.row {
 
 	img {
 		max-width: 100%;
@@ -968,7 +1068,6 @@ textarea {
 
 input[type=submit],
 input[type=reset] {
-	@include crimson;
 	cursor: pointer;	
 	display: inline-block;
 	background: #e3e3e3;
@@ -1059,7 +1158,6 @@ fieldset {
 					border-bottom: 1px solid #ececec;
 				}
 				.gfield_label {
-					@include crimson;
 					@include font-size(15);
 					margin: 0.8em 0 0.3em 0;
 					font-weight: bold;

@@ -10,7 +10,7 @@
 			if(get_sub_field('column')):
 ?>
 			<div class="row" style="<?php the_sub_field('css'); ?>">
-				<div class="inner clearfix">
+				<div class="inner container">
 
 				<?php $total_columns = count( get_sub_field('column', $id)); ?>
 				<?php while (has_sub_field('column', $id)) : ?>
@@ -38,6 +38,34 @@
 					</div>
 				<?php endwhile; ?>
 				</div>
+			</div>
+			<?php endif; ?>
+			<?php break; ?>
+		<?php case 'divider':  ?>
+			<div class="divider grey-gradient-bg">
+				<?php if(get_sub_field('title')): ?>
+				<div class="inner container">
+					<h2 class="text-center"><?php the_sub_field('title'); ?></h2>
+				</div>
+				<?php endif; ?>
+			</div>
+			<?php break; ?>
+		<?php case 'accordion':  ?>
+			<?php if(get_sub_field('items', $id)): ?>
+			<?php wp_enqueue_script('accordion'); ?>
+			<div class="accordion-container">
+				<ul class="accordion container">
+					<?php while (has_sub_field('items', $id)) : ?>
+					<li class="item">
+						<button class="btn"><?php the_sub_field('title'); ?></button>
+						<img src="http://www.carsuk.net/wp-content/gallery/land-rover-lrx-concept/land-rover-lrx-1.jpg" />
+						<div class="content">
+							<h2><?php the_sub_field('title'); ?></h2>
+							<?php the_sub_field('sub_title'); ?>
+						</dov>
+					</li>
+					<?php endwhile; ?>
+				</ul>
 			</div>
 			<?php endif; ?>
 			<?php break; ?>

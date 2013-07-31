@@ -31,9 +31,6 @@ function landrover_setup() {
 
 	require( get_template_directory() . '/inc/shortcodes.php' );
 
-	require( get_template_directory() . '/inc/options.php' );
-
-
 
 	/**
 	 * Make theme available for translation
@@ -85,7 +82,7 @@ function landrover_setup() {
 
 	function remove_menus () {
 		global $menu;
-		$restricted = array(__('Links'));
+		$restricted = array(__('Links'), __('Comments'), __('Posts'));
 		end ($menu);
 		while (prev($menu)){
 			$value = explode(' ',$menu[key($menu)][0]);
@@ -369,8 +366,26 @@ function get_queried_page(){
 	return null;
 }
 
-function add_grav_forms(){
-	$role = get_role('editor');
-	$role->add_cap('gform_full_access');
+add_action('admin_init','custom_capabilities');
+
+if ( ! function_exists( 'custom_capabilities' )) { 
+	function custom_capabilities(){
+		$role = get_role('editor');
+		$role->add_cap('gform_full_access');
+	}
 }
-add_action('admin_init','add_grav_forms');
+
+add_action('acf/options_page/settings','custom_options_pages');
+
+if ( ! function_exists( 'custom_options_pages' )) { 
+	function custom_options_pages($options){
+		$options['title'] = __('Options');
+		$options['pages'] = array(
+			__('General'),
+			__('Header'),
+			__('Footer')
+		);
+
+		return $options;
+	}
+}

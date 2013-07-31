@@ -9,8 +9,10 @@
  */
 ?>
 	</div><!-- #main .site-main -->
-	<footer id="footer" class="site-footer" role="contentinfo">
-		
+	<footer id="footer" class="site-footer grey-gradient-bg" role="contentinfo">
+		<div class="inner container">
+			<p class="text-right bold"><?php the_field('footer_text', 'options') ?></p>
+		</div>
 	</footer><!-- #footer .site-footer -->
 </div><!-- #wrap -->
 

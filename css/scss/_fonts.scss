@@ -1,3 +1,21 @@
+
+@font-face {
+	font-family: "LandRover";
+	src: url('fonts/landrover_light.eot');
+	src: url('fonts/landrover_light.eot?#iefix') format('eot'), url('fonts/landrover_light.woff') format('woff'), url('fonts/landrover_light.ttf') format('truetype'), url('fonts/landrover_light.svg') format('svg');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: "LandRover";
+	src: url('fonts/landrover_medium.eot');
+	src: url('fonts/landrover_medium.eot?#iefix') format('eot'), url('fonts/landrover_medium.woff') format('woff'), url('fonts/landrover_medium.ttf') format('truetype'), url('fonts/landrover_medium.svg') format('svg');
+	font-weight: 400;
+	font-style: normal;
+}
+
+
 @mixin arial {
 	font-family: Arial, Helvetica, sans-serif;
 }
@@ -6,8 +24,23 @@
 	@include arial;
 }
 
-@mixin crimson {
-	font-family: 'Crimson Text', TimesNewRoman, 'Times New Roman', Times, Baskerville, Georgia, serif;
-	font-weight: 400;
+
+@mixin landrover-light {
+	font-family: 'LandRover', Arial, Helvetica, sans-serif;
 	font-style: normal;
+	font-weight: 300;
+}
+	
+.landrover-light {
+	@include landrover-light;
+}
+
+@mixin landrover-medium {
+	font-family: 'LandRover', Arial, Helvetica, sans-serif;
+	font-style: normal;
+	font-weight: 400;
+}
+
+.landrover-medium {
+	@include landrover-medium;
 }

@@ -13,11 +13,11 @@
 
 get_header(); ?>
 
-<div id="page" class="container">
+<div id="page">
 	<?php while ( have_posts() ) : the_post(); ?>
 	<div id="content" <?php post_class(); ?>>
 		<?php if(!$post->post_content == ''): ?>
-		<div class="page-content">
+		<div class="page-content container">
 			<?php the_content(); ?>
 		</div>
 		<?php endif; ?>
