@@ -53,20 +53,124 @@
 		<?php case 'accordion':  ?>
 			<?php if(get_sub_field('items', $id)): ?>
 			<?php wp_enqueue_script('accordion'); ?>
-			<div class="accordion-container">
-				<ul class="accordion container">
+			<div class="accordion-container container">
+				<ul class="accordion">
 					<?php while (has_sub_field('items', $id)) : ?>
-					<li class="item">
-						<button class="btn"><?php the_sub_field('title'); ?></button>
-						<img src="http://www.carsuk.net/wp-content/gallery/land-rover-lrx-concept/land-rover-lrx-1.jpg" />
+					<?php $ajax_page = get_sub_field('ajax_page', $id); ?>
+					<li class="item <?php if($ajax_page) echo 'ajax-btn'; ?>" href="<?php echo get_permalink($ajax_page->ID); ?>" style="background-image: url(http://www.carsuk.net/wp-content/gallery/land-rover-lrx-concept/land-rover-lrx-1.jpg);">
+						<footer class="footer">
+							<button class="btn"><?php the_sub_field('title'); ?></button>
+						</footer>
 						<div class="content">
 							<h2><?php the_sub_field('title'); ?></h2>
 							<?php the_sub_field('sub_title'); ?>
-						</dov>
+						</div>
 					</li>
 					<?php endwhile; ?>
 				</ul>
 			</div>
+			<?php endif; ?>
+			<?php break; ?>
+		<?php case 'ajax_page':  ?>
+			<div id="ajax-page"></div>
+			<?php break; ?>
+		<?php case 'episodes': 
+			$query = new WP_Query(array('post_type' => 'episode', 'posts_per_page' => -1)); 
+			if($query->have_posts()):
+			?>
+			<div class="container episodes">
+				<div class="scroller" data-resize="true">
+					<div class="scroller-mask">
+						<?php while($query->have_posts()): $query->the_post(); ?>
+						<div class="scroll-item" data-id="<?php the_ID(); ?>" style="background: url(http://www.carsuk.net/wp-content/gallery/land-rover-lrx-concept/land-rover-lrx-1.jpg);">
+							<div class="content">
+								<h2 class="episodes-title no-margin"><?php _e("The Episodes", THEME_NAME); ?></h2>
+								<h5 class="title no-margin"><?php _e("Episode", THEME_NAME); echo ' '; the_field('episode_number'); echo ': '; the_title(); ?></h5> 
+								<p class="sub-title"><?php the_field('sub_title'); ?></p>
+								<p><a href="<?php the_permalink(); ?>" class="white-btn"><?php _e("Play this episode", THEME_NAME); ?></a>
+							</div>
+						</div>
+						<?php endwhile; ?>
+					</div>
+					<div class="scroller-navigation">
+						<button class="prev-btn"></button>
+						<button class="next-btn"></button>
+					</div>
+					<footer class="episode-scroller-footer">
+						<div class="scroller-navigation">
+							<button class="prev-btn">&nbsp;</button>
+							<button class="next-btn">&nbsp;</button>
+						</div>
+						<ul class="scroller-pagination">
+							<?php while($query->have_posts()): $query->the_post(); ?>
+							<li><button class="btn" data-id="<?php the_ID(); ?>"></button></li>
+							<?php endwhile; ?>
+						</ul>
+						<a href="<?php the_permalink(); ?>" class="white-btn episodes-btn">Browse all episodes</a>
+					</footer>
+				</div>
+			</div>
+			<?php wp_reset_postdata(); ?>
+			<?php endif; ?>
+			<?php break; ?>
+		<?php case 'riders': 
+			$query = new WP_Query(array('post_type' => 'rider', 'posts_per_page' => -1)); 
+			if($query->have_posts()):
+				wp_enqueue_script('accordion');
+			?>
+			<div class="riders">
+				<div class="inner container">
+					<header class="riders-header text-center">
+						<h2><?php the_sub_field('title'); ?></h2>
+						<p class="landrover-light"><?php the_sub_field('sub_title'); ?></p>
+					</header>
+					<ul class="riders-accordion accordion" data-tab-width="120" data-resize-children="false">
+						<?php while($query->have_posts()): $query->the_post(); ?>
+						<li class="item rider" data-id="<?php the_ID(); ?>">
+							<div class="inner">
+								<div class="featured-image">
+									<?php the_post_thumbnail('full');?>
+									<button class="btn blue-btn"><?php the_title(); ?></button>
+								</div>
+								<div class="content">
+									<button class="close-btn btn"></button>
+									<?php the_content(); ?>
+								</div>
+							</div>
+						</li>
+						<?php endwhile; ?>
+					</ul>
+				</div>
+			</div>
+			<?php wp_reset_postdata(); ?>
+			<?php endif; ?>
+			<?php break; ?>
+		<?php case 'disciplines': 
+			$query = new WP_Query(array('post_type' => 'discipline', 'posts_per_page' => -1)); 
+			if($query->have_posts()):
+			?>
+			<div class="disciplines">
+				<div class="inner container">
+					<header class="disciplines-header text-center">
+						<h2><?php the_sub_field('title'); ?></h2>
+						<p class="landrover-light"><?php the_sub_field('sub_title'); ?></p>
+					</header>
+					<div id="ajax-page"></div>
+					<ul class="disciplines-list clearfix">
+						<?php while($query->have_posts()): $query->the_post(); ?>
+						<li class="span one-third item discipline">
+							<a href="<?php the_permalink(); ?>" class="ajax-btn">
+								<div class="featured-image">
+									<?php the_post_thumbnail('full', array('class' => 'scale'));?>
+								</div>
+								<button class="btn blue-btn"><?php the_title(); ?></button>
+							</a>
+						</li>
+						<?php endwhile; ?>
+					</ul>
+				</div>
+			</div>
+			<?php wp_reset_postdata(); ?>
 			<?php endif; ?>
 			<?php break; ?>
 		<?php case 'pages':  ?>

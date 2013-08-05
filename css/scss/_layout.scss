@@ -35,7 +35,7 @@ body {
 	color: #333333;
 	@include arial;
 	@include font-size(13);
-	line-height: 1.4;
+	line-height: 1.35;
 	min-width: 250px;
 	border: 1px solid #e7e7e7;
 
@@ -54,6 +54,7 @@ body {
 	z-index: 1000;	
 	padding: 0;
 	@include background(linear-gradient(top, #FFF, #d7d7d7));
+	@include box-shadow(0 5px 8px -3px rgba(#000, 0.5));
 
 	@media print {
 		display: none;
@@ -218,6 +219,9 @@ body {
 
 #ajax-page {
 	position: relative;
+	background: #edeced;
+	@include background(linear-gradient(top, color-stops(#ceccce, rgba(#ceccce, 0) 4em)), linear-gradient(bottom, color-stops(#ceccce, rgba(#ceccce, 0) 4em)), #edeced);
+	
 	.loader {
 		display: block;
 		padding: 10px 0;
@@ -260,3 +264,49 @@ body {
 }
 
 #error {}
+
+#single-episode {
+
+
+	#video {
+		background: url(../images/backgrounds/episode_video.jpg) no-repeat;
+		padding: 4em 4em 0 4em;
+		.coming-soon {
+			.content {
+				position: absolute;
+				text-align: center;
+				top: 50%;
+				width: 100%;
+				@include translateY(-50%);
+				z-index: 200;
+			}
+		}
+	}
+
+	#content {
+		padding: 4em 2em;
+
+		.share,
+		.notify {
+			background: url(../images/backgrounds/episode_share.jpg) no-repeat;
+			text-align: center;
+			padding: 4em 1em;
+			color: #FFF;
+		}
+
+		.notify {
+			padding: 2em 1em;
+		}
+	}
+
+	.episode-pagination {
+		background: #f3f3f3;
+		@include background(linear-gradient(color-stops(#e2e0e3, #e2e0e3 60%, #d2d0d3 62%, #e1dfe2)));
+		padding: 3em 0;
+
+		> .container >.inner {
+			padding: 0 2em;
+		}
+		
+	}
+}

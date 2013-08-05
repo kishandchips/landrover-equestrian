@@ -16,12 +16,13 @@
 			height: null, /* Height of the container. This option is required. */
 			startingSlide: 0, /* Zero-based index of which slide should be displayed. */
 			slideClass: null, /* Class prefix of each slide. If left null, no classes will be set. */
-			easing: null, /* Easing method. */
+			easing: 'swing', /* Easing method. */
 			speed: 1200, /* Speed of the slide transition (in ms). */
 			auto: false, /* Whether or not the slideshow should play automatically. */
 			trigger: "click", /* Event type that will bind to the "tab" (click, mouseover, etc.). */
 			pause: true, /* Pause on hover. */
 			invert: false, /* Whether or not to invert the slideshow, so the last slide stays in the same position, rather than the first slide. */
+			resizeChildren: true,
 			animationStart: function () {}, /* Function called when animation starts. */
 			animationComplete: function () {}, /* Function called when animation completes. */
 			buildComplete: function () {}, /* Function called after the accordion is finished building. */
@@ -256,18 +257,21 @@
 								if (o.slideClass !== null) {
 									$(this).addClass(o.slideClass); /* Add the slide class to each of the slides. */
 								}
+
 								$(this).css({
 									"top": 0,
-									"z-index": zindex,
+									//"z-index": zindex,
 									"margin": 0,
 									"padding": 0,
-									"float": "left",
+									//"float": "left",
 									"display": "block",
 									"position": "absolute",
-									"overflow": "hidden",
-									"width": o.slideWidth + o.widthUnits,
+									//"overflow": "hidden",
 									"height": o.height + o.heightUnits
 								});
+								if(o.resizeChildren){
+									$(this).css({"width": o.width / size});
+								}
 								if (childtag === "LI") {
 									$(this).css({
 										"text-indent": 0
@@ -304,7 +308,15 @@
 										}
 									}
 								} else {
-									console.log('not auto');
+									$(this).css('cursor', 'pointer');
+									$(this).addClass(o.slideClosedClass);
+									if (o.invert) {
+										$(this).css({ "right": childindex * (o.width / size), "float": "right"});
+									} else {
+										$(this).css({ "left": childindex * (o.width / size), "float": "left" });
+									}
+
+									obj.data("current", null);
 								}
 							});
 							/* Modify the CSS of the main container. */
@@ -368,34 +380,40 @@
 									/* If the slide is not open... */
 									helpers.timer(obj);
 									o.animationStart();
+
+									var animationOptions = {};
+
+									if(o.resizeChildren) animationOptions.width = o.slideWidth;
+
 									if (o.invert) {
-										obj.children(childtag + ":nth-child(" + c + ")").stop().animate({ right: originals[obj.data("current")] + o.widthUnits }, o.speed, o.easing, o.animationComplete);
+										animationOptions.right = originals[obj.data("current")] + o.widthUnits;
+										obj.children(childtag + ":nth-child(" + c + ")").stop().animate(animationOptions, o.speed, o.easing, o.animationComplete);
 									} else {
-										obj.children(childtag + ":nth-child(" + c + ")").stop().animate({ left: originals[obj.data("current")] + o.widthUnits }, o.speed, o.easing, o.animationComplete);
+										animationOptions.left = originals[obj.data("current")] + o.widthUnits;
+										obj.children(childtag + ":nth-child(" + c + ")").stop().animate(animationOptions, o.speed, o.easing, o.animationComplete);
 									}
+
+									if(o.resizeChildren) animationOptions.width = o.tabWidth;
 									/* Closing other slides. */
 									for (i = 0; i < size; i += 1) {
 										j = i + 1;
 										if (i < obj.data("current")) {
 											if (o.invert) {
-												obj.children(childtag + ":nth-child(" + j + ")").stop().animate({
-													right: o.width - (j * o.tabWidth) + o.widthUnits
-												}, o.speed, o.easing);
+												animationOptions.right = o.width - (j * o.tabWidth) + o.widthUnits;
+												obj.children(childtag + ":nth-child(" + j + ")").stop().animate(animationOptions, o.speed, o.easing);
 											} else {
-												obj.children(childtag + ":nth-child(" + j + ")").stop().animate({
-													left: originals[i] + o.widthUnits
-												}, o.speed, o.easing);
+												animationOptions.left = originals[i] + o.widthUnits;
+												obj.children(childtag + ":nth-child(" + j + ")").stop().animate(animationOptions, o.speed, o.easing);
 											}
 										}
 										if (i > obj.data("current")) {
 											if (o.invert) {
-												obj.children(childtag + ":nth-child(" + j + ")").stop().animate({
-													right: (size - j) * o.tabWidth + o.widthUnits
-												}, o.speed, o.easing);
+												animationOptions.right = (size - j) * o.tabWidth + o.widthUnits;
+
+												obj.children(childtag + ":nth-child(" + j + ")").stop().animate(animationOptions, o.speed, o.easing);
 											} else {
-												obj.children(childtag + ":nth-child(" + j + ")").stop().animate({
-													left: originals[i] + animate + o.widthUnits
-												}, o.speed, o.easing);
+												animationOptions.left = originals[i] + animate + o.widthUnits;
+												obj.children(childtag + ":nth-child(" + j + ")").stop().animate(animationOptions, o.speed, o.easing);
 											}
 										}
 									}
@@ -410,6 +428,12 @@
 						});
 					}
 				}
+			},
+			close: function(){
+				
+				// obj.children().each(function (childindex) {
+
+				// });
 			},
 			stop: function () { /* This will stop the accordion unless the slides are clicked, however, it will not resume the autoplay. */
 				if ($(this).data("auto")) {

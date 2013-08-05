@@ -46,6 +46,7 @@
 		wp_enqueue_script('imagesloaded', get_template_directory_uri().'/js/plugins/jquery.imagesloaded.js', array('jquery'), '', true);
 		wp_enqueue_script('transit', get_template_directory_uri().'/js/plugins/jquery.transit.js', array('jquery'), '', true);
 		wp_register_script('fancybox', get_template_directory_uri().'/js/plugins/jquery.fancybox.min.js', array('jquery'), '', true);
+		wp_deregister_script('accordion');
 		wp_register_script('accordion', get_template_directory_uri().'/js/plugins/jquery.accordion.js', array('jquery'), '', true);
 		wp_enqueue_script('main', get_template_directory_uri().'/js/main.js', array('jquery'), '', true);
 
@@ -58,6 +59,16 @@
 
 </head>
 <body <?php body_class(); ?>>
+<div id="fb-root"></div>
+<script>
+(function(d, s, id){
+ var js, fjs = d.getElementsByTagName(s)[0];
+ if (d.getElementById(id)) {return;}
+ js = d.createElement(s); js.id = id;
+ js.src = "//connect.facebook.net/en_US/all.js";
+ fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
 <div id="wrap" class="hfeed site">
 	<?php do_action( 'before' ); ?>
 	<header id="header" role="banner">
@@ -81,4 +92,3 @@
 		</div>
 	</header><!-- #header -->
 	<div id="main" class="site-main" role="main">
-		<div id="ajax-page"></div>

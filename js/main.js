@@ -9,25 +9,26 @@
 
 
 			$('.share-popup-btn').on('click', function(){
-				var url = $(this).attr('href');
-				var width = 640;
-				var height = 305;
-				var left = ($(window).width() - width) / 2;
-				var top = ($(window).height() - height) / 2;
+				var url = $(this).attr('href'),
+					width = 640,
+					height = 305,
+					left = ($(window).width() - width) / 2,
+					top = ($(window).height() - height) / 2;
 				window.open(url, 'sharer', 'toolbar=0,status=0,width='+width+',height='+height+',left='+left+', top='+top);
 				return false;
 			});
 
 			$('.print-btn').on('click', function(e){
-				console.log('hello');
 				e.preventDefault();
 				window.print();
 			});
 
+			
 			this.lightbox.init();
 			this.ajaxPage.init();
 			this.scroller.init();
 			this.accordion.init();
+			this.facebook.init();
 		
 
 			$(window).resize(this.resize);
@@ -42,28 +43,40 @@
 
 		lightbox: {
 			init: function(){
-				if($.fn.accordion){
-					$('.accordion').each(function(){
-						var accordion = $(this),
-							options = {
-							//	easing: 'easeOutBounce',
-							//	timeout: 5500,
-								slideClass: 'item',
-								slideWidth: 656,
-								width: 810,
-								height: 340
-							};
-
-
-						accordion.accordion(options);
-					});
-				}
+				
 			}
 		},
 
 		accordion: {
 			init: function(){
+				if($.fn.accordion){
+					$('.accordion').each(function(){
+						var accordion = $(this),
+							width = accordion.width(),
+							totalItems = accordion.children().size(),
+							tabWidth = (accordion.data('tab-width')) ? accordion.data('tab-width') : 30,
+							resizeChildren = (accordion.data('resize-children')) ? accordion.data('resize-children') : true,
+							options = {
+							//	easing: 'easeOutBounce',
+							//	timeout: 5500,
+								slideClass: 'item',
+								tabWidth: tabWidth,
+								width: width,
+								height: 400,
+								animationComplete: function(){
+									var item = $(this);
+									item.addClass(options.slideClass + '-opened')
+								},
+								animationStart: function(){
+									var slideClass = options.slideClass;
+									accordion.addClass('opened');
+									$('.'+ slideClass, accordion).removeClass(slideClass + '-opened');
+								}
+							};
 
+						accordion.accordion(options);
+					});
+				}
 			}
 		},
 
@@ -91,92 +104,128 @@
 			}
 		},
 
+		facebook: {
+			init: function(){
+				window.fbAsyncInit = function() {
+					FB.init({
+						appId      : '579639135402354',
+						channelUrl : '//www.kishandchips.com/channel.html',
+						status     : true,
+						xfbml      : true
+					});
+					
+					main.facebook.ready();
+				};
+			},
+			ready: function(){
+				console.log('facebook ready');
+
+				$('.send-to-friends-btn').on('click', function(){
+					FB.ui({method: 'apprequests',
+						message: 'My Great Request'
+					}, requestCallback);
+				});
+
+
+
+
+			}
+		},
+
 		ajaxPage: {
 			init: function(){
-				main.ajaxPage.container = $('#ajax-page');
+				var container = main.ajaxPage.container = $('#ajax-page'),
+					//currUrl = main.ajaxPage.currUrl = window.location.href;
+					pageUrl = main.ajaxPage.pageUrl = window.location.href;
+				
 				$('.ajax-btn').on('click', function(e){
-					e.preventDefault();
 					main.ajaxPage.load($(this).attr('href'));
+					return false;
 				});
+
 			},
 			load: function(url){
 
 				var container = main.ajaxPage.container,
-					regex = new RegExp('(\\?|\\&)ajax=.*?(?=(&|$))'),
-		        	qstring = /\?.+$/;
+					ajaxUrl = main.ajaxUrl(url);
 
-			    if (regex.test(url)){
-			        ajaxUrl = url.replace(regex, '$1ajax=true');
-			    } else if (qstring.test(url)) {
-			        ajaxUrl = url + '&ajax=true';
-			    } else {
-			        ajaxUrl =  url + '?ajax=true';
-			    }
-			    history.pushState(null, null, url);
-			    $('html, body').animate({scrollTop: container.offset().top - 200}, 800, 'easeInOutQuad');
+				
+				container.slideDown(2000);
 			    if($('.content', container).length == 0){
 
 					loader = $('<div class="loader"></div>').hide();
 					container.append(loader);
-					
-					container.delay(200).animate({height: loader.actual('outerHeight')}, function(){
+					container.animate({height: loader.actual('outerHeight')}, function(){
 						loader.fadeIn();
 
 						$.get(ajaxUrl, function(data) {
 							var content = $('<div class="content"></div>').hide();
 
-							container.append(content);
+							container.html(content);
 							content.html(data);
 							loader.fadeOut(function(){
 								if($.fn.imagesLoaded){
 									content.imagesLoaded(function(){
-										main.resize();
 										container.animate({'height': content.height()}, function(){
 											container.css({'height': 'auto'});
 											content.fadeIn();
+											container.slideDown('slow');
 										});
 									});
 								} else {
 									container.animate({'height': content.actual('height')}, function(){
 										container.css({'height': 'auto'});
 										content.fadeIn();
-										main.resize();
 									});
-								}
-								
+								}	
 							});
+
 						});
 					});
 				} else {
 					var content = $('.content', container),
-						loader = $('.loader', container);
-					content.fadeOut(function(){
+						loader = $('<div class="loader"></div>').hide();
+					container.prepend(loader);
+					content.fadeTo(300, 0, function(){
 						loader.fadeIn();
-						
 						$.get(ajaxUrl, function(data) {
 							content.html(data);
 							loader.fadeOut(function(){
-								if($.fn.imagesLoaded){
-									content.imagesLoaded(function(){
-										main.resize();
-										container.animate({'height': content.height()}, function(){
-											container.css({'height': 'auto'});
-											content.fadeIn();
-										});
-									});
-								} else {
-									container.animate({'height': content.actual('height')}, function(){
-										container.css({'height': 'auto'});
-										content.fadeIn();
-										main.resize();
-									});
-								}
-								
+								container.animate({'height': content.actual('height')}, function(){
+									content.fadeTo(300, 1);
+									container.css({'height': 'auto'});
+								});
 							});
 						});
 					});
 				}
+
+				//main.ajaxPage.currUrl = url;
+			}, 
+			close: function(){
+				var container = main.ajaxPage.container;
+
+				container.slideUp(function(){
+					container.html('');
+				});
+
+				//if(Modernizr.history) history.pushState(null, null, main.ajaxPage.pageUrl);
 			}
+		},
+
+		ajaxUrl: function(url){
+			var regex = new RegExp('(\\?|\\&)ajax=.*?(?=(&|$))'),
+		        qstring = /\?.+$/;
+
+			if (regex.test(url)){
+		        ajaxUrl = url.replace(regex, '$1ajax=true');
+		    } else if (qstring.test(url)) {
+		        ajaxUrl = url + '&ajax=true';
+		    } else {
+		        ajaxUrl =  url + '?ajax=true';
+		    }
+
+		    return ajaxUrl;		
 		},
 
 		equalHeight: function(){

@@ -57,6 +57,7 @@ function landrover_setup() {
 		'primary_header' => __( 'Primary Menu', THEME_NAME )
 	) );
 
+	add_image_size( 'custom_medium', 706, 400, true);
 	
 	add_filter('jpeg_quality', function($arg){
 		return 100;
@@ -104,18 +105,48 @@ function landrover_setup() {
 
 	$episode = new Custom_Post_Type( 'Episode', 
  		array(
- 			'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
+ 			//'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
  			'capability_type' => 'post',
  		 	'publicly_queryable' => true,
    			'has_archive' => true, 
     		'hierarchical' => false,
     		'exclude_from_search' => true,
     		'menu_position' => null,
-    		'supports' => array('title', 'thumbnail', 'page-attributes'),
+    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
     		'plural' => 'Episodes'
    		)
    	);
 
+
+	$rider = new Custom_Post_Type( 'Rider', 
+ 		array(
+ 			//'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
+ 			'capability_type' => 'post',
+ 		 	'publicly_queryable' => true,
+   			'has_archive' => false, 
+    		'hierarchical' => false,
+    		'exclude_from_search' => true,
+    		'menu_position' => null,
+    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
+    		'plural' => 'Riders'
+   		)
+   	);
+
+
+
+	$discipline = new Custom_Post_Type( 'Discipline', 
+ 		array(
+ 			//'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
+ 			'capability_type' => 'post',
+ 		 	'publicly_queryable' => true,
+   			'has_archive' => true, 
+    		'hierarchical' => false,
+    		'exclude_from_search' => true,
+    		'menu_position' => null,
+    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
+    		'plural' => 'Disciplines'
+   		)
+   	);
 
 	
  	//global $wp_rewrite;
@@ -387,5 +418,37 @@ if ( ! function_exists( 'custom_options_pages' )) {
 		);
 
 		return $options;
+	}
+}
+add_filter('gform_submit_button', 'custom_submit_button', 10, 2);
+
+if ( ! function_exists( 'custom_submit_button' )) { 
+	function custom_submit_button($button_input, $form){
+		$form_id = $form["id"];
+		$button_input_id = "gform_submit_button_{$form["id"]}";
+		$button = $form["button"];
+		$default_text = __("Submit", "gravityforms");
+		$class = "button gform_button";
+		$alt = __("Submit", "gravityforms");
+		$target_page_number = 0;
+
+		$tabindex = GFCommon::get_tabindex();
+        $input_type='submit';
+        $onclick="";
+        if(!empty($target_page_number)){
+            $onclick = "onclick='jQuery(\"#gform_target_page_number_{$form_id}\").val(\"{$target_page_number}\"); jQuery(\"#gform_{$form_id}\").trigger(\"submit\",[true]); '";
+            $input_type='button';
+        }
+
+        if($button["type"] == "text" || empty($button["imageUrl"])){
+            $button_text = !empty($button["text"]) ? $button["text"] : $default_text;
+            $button_input = "<button type='{$input_type}' id='{$button_input_id}' class='{$class}' {$tabindex} {$onclick}>" . esc_attr($button_text) . "</button>";
+        }
+        else{
+            $imageUrl = $button["imageUrl"];
+            $button_input= "<button type='image' src='{$imageUrl}' id='{$button_input_id}' class='gform_image_button' alt='{$alt}' {$tabindex} {$onclick}/>";
+        }
+
+        return $button_input;
 	}
 }
