@@ -43,7 +43,49 @@
 
 		lightbox: {
 			init: function(){
-				
+				var container = main.lightbox.container = $('#lightbox'),
+					overlay = main.lightbox.overlay = $('.overlay', container),
+					content = main.lightbox.content = $('.content', container),
+					loader = main.lightbox.loader = $('.loader', container);
+
+				$('.lightbox-btn').on('click', main.lightbox.open);
+				overlay.on('click', main.lightbox.close);
+				$(document).on('click', '#lightbox .close-btn', main.lightbox.close);
+			},
+			open: function(e){
+				e.preventDefault();
+				main.lightbox.load($(this).attr('href'));
+			},
+			load: function(url){
+				var container = main.lightbox.container,
+					overlay = main.lightbox.overlay,
+					content = main.lightbox.content;
+
+				overlay.fadeIn('slow', function(){
+					$('html,body').animate({scrollTop: $('.lightbox-overlay').offset().top}, 800, 'easeInOutQuad');
+					$('.lightbox').html('<div class="loader"></div>');
+					$('.lightbox').delay(100).fadeIn();
+					$.get(url, function(data) {
+						$('.lightbox').fadeOut(function(){
+							$('.lightbox')
+								.html(data)
+								.delay(200)
+								.fadeIn();
+						});	
+						
+					});
+				});	
+
+			},
+			close: function(){
+				var container = main.lightbox.container,
+					overlay = main.lightbox.overlay,
+					content = main.lightbox.content;
+
+				content.fadeOut(function(){
+					overlay.fadeOut();
+					content.html();
+				});
 			}
 		},
 
@@ -71,10 +113,18 @@
 									var slideClass = options.slideClass;
 									accordion.addClass('opened');
 									$('.'+ slideClass, accordion).removeClass(slideClass + '-opened');
+								},
+								close: function(){
+									var slideClass = options.slideClass;
+									$('.'+ slideClass, accordion).removeClass(slideClass + '-opened');
+								},
+								closed: function(){
+									accordion.removeClass('opened');
 								}
 							};
 
 						accordion.accordion(options);
+
 					});
 				}
 			}
@@ -106,29 +156,131 @@
 
 		facebook: {
 			init: function(){
-				window.fbAsyncInit = function() {
+				$.ajaxSetup({ cache: true });
+				$.getScript('//connect.facebook.net/en_UK/all.js', function(){
 					FB.init({
-						appId      : '579639135402354',
-						channelUrl : '//www.kishandchips.com/channel.html',
-						status     : true,
-						xfbml      : true
+						appId: '579639135402354',
+						channelUrl: '//www.kishandchips.com/',
+						status: true,
+						xfbml: true,
+						oauth: true
+
 					});
-					
 					main.facebook.ready();
-				};
+				});
 			},
 			ready: function(){
-				console.log('facebook ready');
 
+				// ///DELETE
+				FB.getLoginStatus(function(response) {
+					if (response.status === 'connected') {
+						FB.logout();
+					}
+				});
+	
 				$('.send-to-friends-btn').on('click', function(){
-					FB.ui({method: 'apprequests',
-						message: 'My Great Request'
-					}, requestCallback);
+					
+					FB.ui({
+						method: 'send',
+						link: 'http://www.landrover.co.uk/'
+					});
 				});
 
+				main.competition.init();
+			}
+		},
 
+		competition: {
+			init: function(){
+				var form = main.competition.form = $('.competition'),
+					email = main.competition.email = {
+						field: $('#field_1_3', form),
+						input: $('#input_1_3', form)
+					},
+					facebook = main.competition.facebook = {
+						input: $('#input_1_4', form)
+					},
+					permissions = main.competition.permissions = ['email'];
+							
+				FB.getLoginStatus(function(response) {
+					if (response.status === 'connected') {
+						main.competition.checkPermissions(function(authorized){
+							if(authorized){
+								FB.api('/me', function(response){
+									email.input.val(response.email);
+								});
+							}
+						});
+					} else {
+						if(form.parent().hasClass('gform_validation_error')){
+							email.field.show();	
+						}
+					}
+				});
+				form.on('submit', main.competition.submit);
+			},
 
+			submit: function(){
+				var form = main.competition.form,
+					email = main.competition.email,
+					facebook = main.competition.facebook;
+				if(email.input.val()){
+					return true;
+				} else {
+					FB.getLoginStatus(function(response) {
+						
+						if (response.status === 'connected') {
+							main.competition.checkPermissions(function(authorized){
+								
+								if(authorized){
+									FB.api('/me', function(response){
+										email.input.val(response.email);
+										facebook.input.val('1');
+										form.submit();
+									});
+								} else {
+									main.competition.authorize();
+								}
+							});
+						} else if (response.status === 'not_authorized') {
+							main.competition.authorize();
+						} else {
+							FB.login(function(response){
+								if(response.status === 'connected'){
+									form.submit();
+								} else {
+									alert('If you would not like to login with Facebook, please enter your email address');
+									email.field.show();
+								}
+							}, {scope: main.competition.permissions.join(',')});
+						}
+					});
 
+					return false;
+				}
+			},
+			checkPermissions: function(callback){
+				FB.api('/me/permissions', function(response){
+					var permissions = main.competition.permissions,
+						enabledPermissions = response.data[0],
+						authorized = false;
+					for(var i in permissions){
+						var permission = permissions[i];
+						if(enabledPermissions[permission]){
+							authorized = true;
+						} 
+					}
+
+					callback(authorized);
+				});
+			},
+			authorize: function(){
+				FB.ui({
+					method: 'oauth',
+					scope: main.competition.permissions.join(',')
+				}, function(e){
+					main.competition.form.submit();
+				});
 			}
 		},
 
@@ -154,7 +306,6 @@
 			    if($('.content', container).length == 0){
 
 					loader = $('<div class="loader"></div>').hide();
-					container.append(loader);
 					container.animate({height: loader.actual('outerHeight')}, function(){
 						loader.fadeIn();
 

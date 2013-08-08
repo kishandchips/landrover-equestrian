@@ -27,8 +27,6 @@ if ( ! function_exists( 'landrover_setup' ) ):
 function landrover_setup() {
 	global $woocommerce;
 
-	require( get_template_directory() . '/inc/custom_post_type.php' );
-
 	require( get_template_directory() . '/inc/shortcodes.php' );
 
 
@@ -102,58 +100,7 @@ function landrover_setup() {
 
 	add_filter('widget_text', 'do_shortcode');
 
-
-	$episode = new Custom_Post_Type( 'Episode', 
- 		array(
- 			//'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
- 			'capability_type' => 'post',
- 		 	'publicly_queryable' => true,
-   			'has_archive' => true, 
-    		'hierarchical' => false,
-    		'exclude_from_search' => true,
-    		'menu_position' => null,
-    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
-    		'plural' => 'Episodes'
-   		)
-   	);
-
-
-	$rider = new Custom_Post_Type( 'Rider', 
- 		array(
- 			//'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
- 			'capability_type' => 'post',
- 		 	'publicly_queryable' => true,
-   			'has_archive' => false, 
-    		'hierarchical' => false,
-    		'exclude_from_search' => true,
-    		'menu_position' => null,
-    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
-    		'plural' => 'Riders'
-   		)
-   	);
-
-
-
-	$discipline = new Custom_Post_Type( 'Discipline', 
- 		array(
- 			//'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
- 			'capability_type' => 'post',
- 		 	'publicly_queryable' => true,
-   			'has_archive' => true, 
-    		'hierarchical' => false,
-    		'exclude_from_search' => true,
-    		'menu_position' => null,
-    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
-    		'plural' => 'Disciplines'
-   		)
-   	);
-
 	
- 	//global $wp_rewrite;
-	//$wp_rewrite->flush_rules();
-	//add_rewrite_rule('case-studies/([^/]+)?', 'index.php?post_type=true&work=$matches[1]', 'top');
-   	//$shop->add_taxonomy('Shop Category', array('hierarchical' => true), array('plural' => 'Shop Categories'));
-
 	add_editor_style('css/editor-styles.css');
 
 	add_filter("gform_tabindex", create_function("", "return false;"));
@@ -165,6 +112,65 @@ endif; // landrover_setup
 
 add_action( 'after_setup_theme', 'landrover_setup' );
 
+add_action('init', 'set_custom_post_types');
+
+if(!function_exists('set_custom_post_types')) {
+	function set_custom_post_types(){
+		require( get_template_directory() . '/inc/custom_post_type.php' );
+		$episodes_page = get_field('episodes_page', 'options');
+		$episode = new Custom_Post_Type( 'Episode', 
+	 		array(
+	 			'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri($episodes_page->ID) ),
+	 			'capability_type' => 'post',
+	 		 	'publicly_queryable' => true,
+	   			'has_archive' => true, 
+	    		'hierarchical' => false,
+	    		'exclude_from_search' => true,
+	    		'menu_position' => null,
+	    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
+	    		'plural' => 'Episodes'
+	   		)
+	   	);
+
+
+		$rider = new Custom_Post_Type( 'Rider', 
+	 		array(
+	 			//'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
+	 			'capability_type' => 'post',
+	 		 	'publicly_queryable' => true,
+	   			'has_archive' => false, 
+	    		'hierarchical' => false,
+	    		'exclude_from_search' => true,
+	    		'menu_position' => null,
+	    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
+	    		'plural' => 'Riders'
+	   		)
+	   	);
+
+
+
+		$discipline = new Custom_Post_Type( 'Discipline', 
+	 		array(
+	 			//'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri(get_landrover_option('episode_page_id')) ),
+	 			'capability_type' => 'post',
+	 		 	'publicly_queryable' => true,
+	   			'has_archive' => true, 
+	    		'hierarchical' => false,
+	    		'exclude_from_search' => true,
+	    		'menu_position' => null,
+	    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
+	    		'plural' => 'Disciplines'
+	   		)
+	   	);
+
+		
+	 	//global $wp_rewrite;
+		//$wp_rewrite->flush_rules();
+		//add_rewrite_rule('case-studies/([^/]+)?', 'index.php?post_type=true&work=$matches[1]', 'top');
+	   	//$shop->add_taxonomy('Shop Category', array('hierarchical' => true), array('plural' => 'Shop Categories'));
+
+	}
+}
 
 /**
  * Register widgetized area and update sidebar with default widgets

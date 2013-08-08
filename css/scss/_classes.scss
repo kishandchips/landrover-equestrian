@@ -672,6 +672,7 @@ hr {
 	position: relative;
 	z-index: 600;
 	@include box-shadow(0 5px 8px -3px rgba(#000, 0.5));
+	@include background(linear-gradient(#f3f3f3, #d5d5d5));
 	padding: 1.4em;	
 }
 
@@ -679,7 +680,6 @@ hr {
 	padding: 0;
 	margin: 0;
 	position: relative;
-	overflow: hidden;
 	list-style: none;
 
 	.item {
@@ -720,7 +720,7 @@ hr {
 			cursor: pointer;
 		}
 
-		&.item-closed:hover .btn {
+		&.item-closed:hover .footer .btn {
 			background: #000;
 			color: #FFF;
 		}
@@ -759,6 +759,8 @@ hr {
 
 	.accordion {
 		.item {
+			@include transition(transform 0.5s ease);
+			
 			> .inner {
 				background: #FFF;
 				position: relative;
@@ -773,6 +775,7 @@ hr {
 
 			&.item-open {
 				z-index: 200;
+
 				> .inner {
 					width: 340px;
 					@include scale(1);
@@ -786,14 +789,22 @@ hr {
 			}
 
 			&.item-closed {
-
+				
 				z-index: 100;
-				.inner {
-					@include scale(0.9);
-					&:hover {
-						@include scale(1);
+				//@include scale(0.9);
+				&:hover {
+					@include scale(1.1);
+
+					.featured-image {
+						.btn {
+							background: #000;
+							color: #FFF;
+						}
 					}
 				}
+				// .inner {
+					
+				// }
 			}
 
 			.featured-image {
@@ -802,8 +813,11 @@ hr {
 				top: 0;
 				height: 100%;
 				width: 230px;
+				padding: 0 20px;
+				left: -20px;
 				img {
-					left: -20px;
+					width: 100%;
+					left: 0;
 					position: absolute;
 				}
 
@@ -816,6 +830,7 @@ hr {
 					left: 50%;
 					z-index: 200;
 					@include translateX(-50%);
+
 				}
 			}
 
@@ -862,9 +877,15 @@ hr {
 		&.opened {
 			.item {
 				&.item-closed {
-					.inner {
-						opacity: 0.5;
-						@include scale(0.6);
+					@include apply-origin(0 50%, false);
+					//> .inner {
+					//	opacity: 0.5;
+						@include scale(0.5);
+					//}
+
+					.featured-image {
+						.btn {
+						}
 					}
 				}
 			}
@@ -1005,8 +1026,13 @@ hr {
 
 
 .competition {
-	padding: 4em 0;
+	padding: 6em 0;
+	background: url(../images/backgrounds/competition.jpg) repeat-x center bottom;
 
+	&.gform_confirmation_wrapper {
+		background: none;
+		text-align: center;
+	}
 	.gform_heading,
 	.gform_body,
 	.gform_footer {
@@ -1037,47 +1063,60 @@ hr {
 			}
 		}
 
-		.hide-label {
-			.gfield_label {
-				display: none;
-			}
-		}
-		.large-input {
-
-			.ginput_container {
-				> ul {
-					padding: 1em 0 0 0;
-					overflow: visible;
-
-					li {
-						overflow: visible;
-					}
+		.gform_fields {
+			.hide-label {
+				.gfield_label {
+					display: none;
 				}
+			}
 
-				input[type=checkbox],
-				input[type=radio],
-				input {
-					opacity: 0;
-					&:checked {
-						+ label {
+			.gfield.large-input {
+
+				.ginput_container {
+					> ul {
+						padding: 1em 0;
+
+						li {
+							overflow: visible;
+						}
+					}
+
+					input[type=checkbox],
+					input[type=radio],
+					input {
+						opacity: 0;
+						&:checked {
+							+ label {
+								@include background(linear-gradient(#626262, #7d7b7d));
+								@include box-shadow(inset 0px 2px 8px 2px rgba(#000, 0.4));
+								color: #FFF;
+							}
+						}
+					}
+
+					label {
+						cursor: pointer;
+						font-weight: bold;
+						display: inline-block;
+						padding: 3.5em 5em;
+						@include background(linear-gradient(#f3f3f3, #dfdcdf));
+						@include box-shadow(0px 2px 5px 0px rgba(#000, 0.4));
+						margin: 0;
+						@include transition(all 0.3s ease);
+						text-transform: uppercase;
+						&:hover {
+							@include scale(1.1);
 							@include background(linear-gradient(#ffffff, #e8e5e8));
 						}
 					}
 				}
+			}
 
-				label {
-					cursor: pointer;
-					font-weight: bold;
-					display: inline-block;
-					padding: 4em 5em;
-					@include background(linear-gradient(#f3f3f3, #dfdcdf));
-					@include box-shadow(0px 2px 5px 0px rgba(#000, 0.4));
-					margin: 0;
-					@include transition(all 0.3s ease);
-					text-transform: uppercase;
-					&:hover {
-						@include scale(1.1);
-					}
+			.gfield.terms-conditions {
+				margin-top: 8em;
+
+				&.gfield_error label {
+					color: #FFF;
 				}
 			}
 		}
@@ -1292,7 +1331,7 @@ input[type=submit] {
 }
 
 .span {
-	min-height: 1px;
+	min-height: 2px;
 	padding-left: 10px;
 	padding-right: 10px;
 	float: left;
@@ -1500,7 +1539,8 @@ fieldset {
 
 .gform_wrapper {
 	max-width: 100% !important;
- 	
+ 	margin: 0 !important;
+
  	&.gf_browser_chrome {
  		.gfield_checkbox li input[type=checkbox],
  		.gfield_radio li input[type=radio],
@@ -1509,64 +1549,81 @@ fieldset {
  		}
 
  	}
-
-	.gform_heading {
-		.gform_title {
-			font-weight: normal;
-			@include font-size(20);
+ 	form {
+		.gform_heading {
+			.gform_title {
+				font-weight: normal;
+				@include font-size(20);
+			}
 		}
-	}
 
-	.validation_error {
-		display: none;
-	}
+		div.validation_error {
+			text-align: center;
+			@include font-size(12);
+			font-weight: normal;
+			margin: 2em 0 0 0;
+		}
 
- 	.gform_body {
+	 	.gform_body {
 
-// 		margin: 20px 0;
-// 		font-family: Arial, Helvetica, sans-serif;
+	// 		margin: 20px 0;
+	// 		font-family: Arial, Helvetica, sans-serif;
 
-// 		font-size: 11px;
+	// 		font-size: 11px;
 
-		.gform_fields {
-			margin: 0;
-			padding: 0;
-			list-style: none;
-			@extend .clearfix;
+			.gform_fields {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+				@extend .clearfix;
 
- 			.gfield {
-// 				margin: 0 0 20px 0;
-				
-				&.gfield_error {
-					border: none;
-					background: none;
-//					@include background(rgba(#a40000, 0.4));
-					label {
-						color: #333;
+	 			.gfield {
+	 				margin: 2em 0;
+					padding: 0;
+					&.gfield_error {
+						border: none;
+						background: none;
+	//					@include background(rgba(#a40000, 0.4));
+						label {
+							color: #333;
+						}
 					}
-				}
 
-				&.gsection {
-					border-bottom: 1px solid #ececec;
-				}
-				.gfield_label {
-
-				}
-
-				.gfield_description {
-					&.validation_message {
-						color: #a40000;
+					&.gsection {
+						border-bottom: 1px solid #ececec;
 					}
-				}
- 			}
- 		}
- 	}
+					.gfield_label {
 
- 	.gform_footer {
- 		margin: 0;
+					}
 
- 		.button {
- 			@extend .white-btn;
- 		}
- 	}
+					.ginput_container {
+						input[type=text],
+						input[type=email],
+						input[type=password]{
+							text-align: center;
+							padding: 0.5em;
+							@include font-size(15);
+						}
+					}
+
+					.gfield_description {
+						&.validation_message {
+							padding: 0 !important;
+							margin: 0;
+							color: #df5206;
+						}
+					}
+	 			}
+	 		}
+	 	}
+
+	 	.gform_footer {
+	 		margin: 0;
+	 		padding: 0;
+
+	 		.button {
+	 			@extend .white-btn;
+	 		}
+	 	}
+	}
 }

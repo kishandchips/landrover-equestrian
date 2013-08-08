@@ -7,6 +7,8 @@
  * @package landrover
  * @since landrover 1.0
  */
+$ajax = (isset($_GET['ajax']) && $_GET['ajax'] == true) ? true : false;
+if(!$ajax):
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -60,15 +62,11 @@
 </head>
 <body <?php body_class(); ?>>
 <div id="fb-root"></div>
-<script>
-(function(d, s, id){
- var js, fjs = d.getElementsByTagName(s)[0];
- if (d.getElementById(id)) {return;}
- js = d.createElement(s); js.id = id;
- js.src = "//connect.facebook.net/en_US/all.js";
- fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-</script>
+<div id="lightbox">
+	<div class="loader"></div>
+	<div class="content"></div>
+	<div class="overlay"></div>
+</div>
 <div id="wrap" class="hfeed site">
 	<?php do_action( 'before' ); ?>
 	<header id="header" role="banner">
@@ -92,3 +90,5 @@
 		</div>
 	</header><!-- #header -->
 	<div id="main" class="site-main" role="main">
+
+<?php endif; ?>

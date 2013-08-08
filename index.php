@@ -10,9 +10,8 @@
  * @package landrover
  * @since landrover 1.0
  */
-$ajax = (isset($_GET['ajax']) && $_GET['ajax'] == true) ? true : false;
 
-if(!$ajax) get_header(); ?>
+get_header(); ?>
 
 <div id="page">
 	<?php while ( have_posts() ) : the_post(); ?>
@@ -29,4 +28,4 @@ if(!$ajax) get_header(); ?>
 	<?php endwhile; // end of the loop. ?>
 
 </div><!-- #page -->
-<?php if(!$ajax) get_footer(); ?>
+<?php get_footer(); ?>

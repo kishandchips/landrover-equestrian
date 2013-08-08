@@ -7,6 +7,8 @@
  * @package landrover
  * @since landrover 1.0
  */
+$ajax = (isset($_GET['ajax']) && $_GET['ajax'] == true) ? true : false;
+if(!$ajax):
 ?>
 	</div><!-- #main .site-main -->
 	<footer id="footer" class="site-footer grey-gradient-bg" role="contentinfo">
@@ -15,7 +17,7 @@
 		</div>
 	</footer><!-- #footer .site-footer -->
 </div><!-- #wrap -->
-
+<?php endif; ?>
 <?php wp_footer(); ?>
 
 </body>

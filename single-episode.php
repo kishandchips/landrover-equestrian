@@ -10,9 +10,8 @@
  * @package landrover
  * @since landrover 1.0
  */
-$ajax = (isset($_GET['ajax']) && $_GET['ajax'] == true) ? true : false;
 
-if(!$ajax) get_header(); ?>
+get_header(); ?>
 
 <div id="single-episode">
 	<?php while ( have_posts() ) : the_post(); ?>
@@ -47,7 +46,7 @@ if(!$ajax) get_header(); ?>
 
 		<div id="content" <?php post_class('clearfix'); ?>>
 			<div class="span five alpha">
-				<h2 class="no-margin title"><?php _e("Episode", THEME_NAME); the_field('episode_number'); echo ': <span class="orange">'; the_title(); ?></span></h2>
+				<h2 class="no-margin title"><?php _e("Episode ", THEME_NAME); the_field('episode_number'); echo ': <span class="orange">'; the_title(); ?></span></h2>
 				<p class="landrover-light uppercase sub-title"><?php the_field('sub_title'); ?></p>
 				<div class="content">
 				<?php if(!$post->post_content == '' && ($episode_date < $now)): ?>
@@ -115,4 +114,4 @@ if(!$ajax) get_header(); ?>
 	<?php endwhile; // end of the loop. ?>
 
 </div><!-- #page -->
-<?php if(!$ajax) get_footer(); ?>
+<?php get_footer(); ?>

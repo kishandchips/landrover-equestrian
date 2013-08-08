@@ -26,6 +26,8 @@
 			animationStart: function () {}, /* Function called when animation starts. */
 			animationComplete: function () {}, /* Function called when animation completes. */
 			buildComplete: function () {}, /* Function called after the accordion is finished building. */
+			close: function () {}, /* Function called before the accordion is closed. */
+			closed: function () {}, /* Function called after the accordion is closed. */
 			errors: false /* Display accordion specific errors. */
 		}, helpers = {
 			displayError: function (msg, e) {
@@ -233,6 +235,7 @@
 							childtag = obj.children().get(0).tagName; /* Tag type of the children. */
 							size = obj.children().size(); /* Number of children. */
 							obj.data($.extend({}, {
+								options: o,
 								auto: o.auto,
 								interval: null,
 								timeout: o.timeout,
@@ -242,12 +245,17 @@
 								next: helpers.getNext(size, o.startingSlide),
 								slideClass: o.slideClass, /* Keeping this around right now only for the sake of the destroy function. */
 								inside: false,
-								pause: o.pause
+								pause: o.pause,
+								close: methods.close
 							}));
 							if (o.heightUnits === "%") {
 								o.height = (obj.parent().get(0).tagName === "BODY") ? o.height * 0.01 * $(window).height() : o.height * 0.01 * obj.parent().height();
 								o.heightUnits = "px"; /* Need to revert to pixels because CSS 100% height does not cooperate. */
 							}
+
+							$('.close-btn', obj).on('click', function(){
+								obj.data('close')(obj);
+							});
 							/* Loop through each of the slides and set the layers. */
 							obj.children().each(function (childindex) {
 								var zindex, xpos, y;
@@ -258,15 +266,9 @@
 									$(this).addClass(o.slideClass); /* Add the slide class to each of the slides. */
 								}
 
+
 								$(this).css({
-									"top": 0,
-									//"z-index": zindex,
-									"margin": 0,
-									"padding": 0,
-									//"float": "left",
-									"display": "block",
 									"position": "absolute",
-									//"overflow": "hidden",
 									"height": o.height + o.heightUnits
 								});
 								if(o.resizeChildren){
@@ -280,9 +282,9 @@
 
 								if (obj.data("auto")) {
 									if (o.invert) {
-										$(this).css({ "right": xpos + o.widthUnits, "float": "right" });
+										$(this).css({ "right": xpos + o.widthUnits});
 									} else {
-										$(this).css({ "left": xpos + o.widthUnits, "float": "left" });
+										$(this).css({ "left": xpos + o.widthUnits});
 									}
 
 									if (childindex === (o.startingSlide)) {
@@ -311,9 +313,9 @@
 									$(this).css('cursor', 'pointer');
 									$(this).addClass(o.slideClosedClass);
 									if (o.invert) {
-										$(this).css({ "right": childindex * (o.width / size), "float": "right"});
+										$(this).css({ "right": childindex * (o.width / size)});
 									} else {
-										$(this).css({ "left": childindex * (o.width / size), "float": "left" });
+										$(this).css({ "left": childindex * (o.width / size)});
 									}
 
 									obj.data("current", null);
@@ -323,10 +325,7 @@
 							obj.css({
 								"display": "block",
 								"height": o.height + o.heightUnits,
-								"width": o.width + o.widthUnits,
-								"padding": 0,
-								"position": "relative",
-								"overflow": "hidden"
+								"width": o.width + o.widthUnits
 							});
 							/* If the container is a list, get rid of any bullets. */
 							if ((tag === "UL") || (tag === "OL")) {
@@ -429,11 +428,67 @@
 					}
 				}
 			},
-			close: function(){
-				
-				// obj.children().each(function (childindex) {
+			close: function(obj){
+				var o = obj.data('options'), originals = [], /* inside = false, */ animate, tag, childtag, size, previous = -1; /* o: all of the options (defaults, user options, settings) */
+					animate = o.slideWidth - o.tabWidth; /* Number of pixels yet do be displayed on a hidden slide. */
+					tag = obj.get(0).tagName; /* Tag type of the container. */
+					childtag = obj.children().get(0).tagName; /* Tag type of the children. */
+					size = obj.children().size();
 
-				// });
+				obj.children().each(function (childindex) {
+					var zindex, xpos, y;
+					xpos = o.invert ? xpos = ((size - 1) * o.tabWidth) - (childindex * o.tabWidth) : childindex * o.tabWidth; /* Used for the position of each slide. */
+					originals[childindex] = xpos; /* px position of each open slide. */
+					$(this).removeClass(o.slideOpenClass);
+					o.close();
+					if (obj.data("auto")) {
+						if (o.invert) {
+							$(this).animate({ "right": xpos + o.widthUnits}, o.speed, o.easing);
+						} else {
+							$(this).animate({ "left": xpos + o.widthUnits}, o.speed, o.easing);
+						}
+
+						if (childindex === (o.startingSlide)) {
+							$(this).animate("cursor", "default");
+							if (o.slideClass !== null) {
+								$(this).addClass(o.slideOpenClass);
+							}
+						} else {
+							$(this).animate("cursor", "pointer");
+							if (o.slideClass !== null) {
+								$(this).addClass(o.slideClosedClass);
+							}
+							if ((childindex > (o.startingSlide)) && (!o.invert)) {
+								y = childindex + 1;
+								obj.children(childtag + ":nth-child(" + y + ")").animate({
+									left: originals[y - 1] + animate + o.widthUnits
+								}, o.speed, o.easing);
+							} else if ((childindex < (o.startingSlide)) && (o.invert)) {
+								y = childindex + 1;
+								obj.children(childtag + ":nth-child(" + y + ")").animate({
+									right: originals[y - 1] + animate + o.widthUnits
+								}, o.speed, o.easing);
+							}
+						}
+					} else {
+						$(this).animate('cursor', 'pointer');
+						//$(this).addClass(o.slideClosedClass);
+						if (o.invert) {
+							$(this).animate({ "right": childindex * (o.width / size)}, o.speed, o.easing);
+						} else {
+							$(this).animate({ "left": childindex * (o.width / size)}, o.speed, o.easing);
+						}
+					}
+
+					setTimeout(function(){	
+						o.closed();
+						obj.data("current", null);
+					}, o.speed + 500);
+					
+					
+					
+					
+				});
 			},
 			stop: function () { /* This will stop the accordion unless the slides are clicked, however, it will not resume the autoplay. */
 				if ($(this).data("auto")) {

@@ -42,7 +42,7 @@
 			<?php endif; ?>
 			<?php break; ?>
 		<?php case 'divider':  ?>
-			<div class="divider grey-gradient-bg">
+			<div class="divider">
 				<?php if(get_sub_field('title')): ?>
 				<div class="inner container">
 					<h2 class="text-center"><?php the_sub_field('title'); ?></h2>
