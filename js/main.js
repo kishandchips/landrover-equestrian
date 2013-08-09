@@ -38,6 +38,8 @@
 
 		loaded: function(){
 			$('body').addClass('loaded');
+			FB.Canvas.setAutoGrow();
+			FB.Canvas.setSize( {height: $(window).height()});
 			this.equalHeight();
 		},
 
@@ -96,7 +98,7 @@
 						var accordion = $(this),
 							width = accordion.width(),
 							totalItems = accordion.children().size(),
-							tabWidth = (accordion.data('tab-width')) ? accordion.data('tab-width') : 30,
+							tabWidth = (accordion.data('tab-width')) ? accordion.data('tab-width') : 30
 							resizeChildren = (accordion.data('resize-children')) ? accordion.data('resize-children') : true,
 							options = {
 							//	easing: 'easeOutBounce',
@@ -170,11 +172,10 @@
 				});
 			},
 			ready: function(){
-
 				// ///DELETE
 				FB.getLoginStatus(function(response) {
 					if (response.status === 'connected') {
-						FB.logout();
+					//	FB.logout();
 					}
 				});
 	

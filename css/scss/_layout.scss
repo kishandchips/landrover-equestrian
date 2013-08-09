@@ -31,29 +31,32 @@ html {
 }
 
 body {
-	background: #FFF;
 	color: #333333;
 	@include arial;
 	@include font-size(13);
 	line-height: 1.35;
 	min-width: 250px;
-	border: 1px solid #e7e7e7;
-
+	overflow-x: hidden;
 	// @include device-width(6) {
 	// 	@include font-size(12);
 	// 	line-height: 1.2;
 	// }
+	background: #000;
 }
 
 #wrap {
 	position: relative;
 	z-index: 500;
+	width: 810px;
+	margin: 0 auto;
+	background: #FFF;
 }
 
 #header {
 	position: relative;
 	z-index: 1000;	
 	padding: 0;
+	@include filter-gradient(#FFF, #d7d7d7);
 	@include background(linear-gradient(top, #FFF, #d7d7d7));
 	@include box-shadow(0 5px 8px -3px rgba(#000, 0.5));
 
@@ -211,6 +214,10 @@ body {
 	
 #footer {
 	
+	> .inner {
+		padding: 0 1em;
+	}
+
 	@media print {
 		display: none;
 	}
@@ -317,13 +324,13 @@ body {
 
 	.episode-pagination {
 		background: #f3f3f3;
+		@include filter-gradient(#e2e0e3, #e1dfe2);
 		@include background(linear-gradient(color-stops(#e2e0e3, #e2e0e3 60%, #d2d0d3 62%, #e1dfe2)));
 		padding: 3em 0;
 
 		> .container >.inner {
 			padding: 0 2em;
 		}
-		
 	}
 }
 

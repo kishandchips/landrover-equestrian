@@ -124,7 +124,7 @@
 						<h2><?php the_sub_field('title'); ?></h2>
 						<p class="landrover-light"><?php the_sub_field('sub_title'); ?></p>
 					</header>
-					<ul class="riders-accordion accordion" data-tab-width="120" data-resize-children="false">
+					<ul class="riders-accordion accordion" data-tab-width="120"  data-resize-children="false">
 						<?php while($query->have_posts()): $query->the_post(); ?>
 						<li class="item rider" data-id="<?php the_ID(); ?>">
 							<div class="inner">

@@ -324,8 +324,7 @@
 							/* Modify the CSS of the main container. */
 							obj.css({
 								"display": "block",
-								"height": o.height + o.heightUnits,
-								"width": o.width + o.widthUnits
+								"height": o.height + o.heightUnits
 							});
 							/* If the container is a list, get rid of any bullets. */
 							if ((tag === "UL") || (tag === "OL")) {
