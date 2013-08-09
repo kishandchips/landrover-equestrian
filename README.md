@@ -1,1 +1,4 @@
-Wordpress theme for GB Teddybear
+Landrover
+=========
+
+Landrover equestrian campaign Wordpress theme
