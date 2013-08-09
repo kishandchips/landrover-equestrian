@@ -41,15 +41,12 @@ body {
 	// 	@include font-size(12);
 	// 	line-height: 1.2;
 	// }
-	background: #000;
+	background: #FFF;
 }
 
 #wrap {
 	position: relative;
 	z-index: 500;
-	width: 810px;
-	margin: 0 auto;
-	background: #FFF;
 }
 
 #header {
@@ -256,6 +253,10 @@ body {
 
 	> .overlay {
 		display: none;
+	}
+
+	> .content {
+		position: absolute;
 	}
 }
 

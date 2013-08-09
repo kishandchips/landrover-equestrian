@@ -61,18 +61,35 @@
 			load: function(url){
 				var container = main.lightbox.container,
 					overlay = main.lightbox.overlay,
-					content = main.lightbox.content;
+					content = main.lightbox.content,
+					loader = main.lightbox.loader,
+					documentHeight = $(document).height(),
+					ajaxUrl = main.ajaxUrl(url);
 
+				container.height(documentHeight);
+				container.show();
+				loader.fadeIn();
 				overlay.fadeIn('slow', function(){
-					$('html,body').animate({scrollTop: $('.lightbox-overlay').offset().top}, 800, 'easeInOutQuad');
-					$('.lightbox').html('<div class="loader"></div>');
-					$('.lightbox').delay(100).fadeIn();
-					$.get(url, function(data) {
-						$('.lightbox').fadeOut(function(){
-							$('.lightbox')
-								.html(data)
-								.delay(200)
-								.fadeIn();
+					
+					$.get(ajaxUrl, function(data) {
+						content.html(data)
+						loader.fadeOut(function(){
+							
+							if($.fn.imagesLoaded){
+								content.imagesLoaded(function(){
+									var top = (documentHeight - content.height()) / 2;
+									content.animate({top: top}, function(){
+										container.css({'height': 'auto'});
+										content.fadeIn();
+										container.slideDown('slow');
+									});
+								});
+							} else {
+								container.animate({'height': content.actual('height')}, function(){
+									container.css({'height': 'auto'});
+									content.fadeIn();
+								});
+							}	
 						});	
 						
 					});
@@ -85,7 +102,9 @@
 					content = main.lightbox.content;
 
 				content.fadeOut(function(){
-					overlay.fadeOut();
+					overlay.fadeOut(function(){
+						container.hide();
+					});
 					content.html();
 				});
 			}

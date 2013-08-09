@@ -36,7 +36,7 @@
 }
 
 .grey-gradient-bg {
-	@include linear-gradient(#f3f3f3, #d5d5d5);
+	@include filter-gradient(#f3f3f3, #d5d5d5);
 	@include background(linear-gradient(#f3f3f3, #d5d5d5));
 }
 

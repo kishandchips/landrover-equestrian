@@ -18,7 +18,7 @@ get_header(); ?>
 	<div id="content" <?php post_class(); ?>>
 		<?php if(!$post->post_content == ''): ?>
 		<div class="page-content container">
-			<?php the_content(); ?>
+			<div class="span"><?php the_content(); ?></div>
 		</div>
 		<?php endif; ?>
 		<?php if ( get_field('content')):?>
