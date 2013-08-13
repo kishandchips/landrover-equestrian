@@ -56,6 +56,8 @@ function landrover_setup() {
 	) );
 
 	add_image_size( 'custom_medium', 706, 400, true);
+	add_image_size( 'custom_large', 810, 320, true);
+	add_image_size( 'accordion', 650, 330, true);
 	
 	add_filter('jpeg_quality', function($arg){
 		return 100;
@@ -117,21 +119,22 @@ add_action('init', 'set_custom_post_types');
 if(!function_exists('set_custom_post_types')) {
 	function set_custom_post_types(){
 		require( get_template_directory() . '/inc/custom_post_type.php' );
-		$episodes_page = get_field('episodes_page', 'options');
-		$episode = new Custom_Post_Type( 'Episode', 
-	 		array(
-	 			'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri($episodes_page->ID) ),
-	 			'capability_type' => 'post',
-	 		 	'publicly_queryable' => true,
-	   			'has_archive' => true, 
-	    		'hierarchical' => false,
-	    		'exclude_from_search' => true,
-	    		'menu_position' => null,
-	    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
-	    		'plural' => 'Episodes'
-	   		)
-	   	);
-
+		if(function_exists('get_field')) {
+			$episodes_page = get_field('episodes_page', 'options');
+			$episode = new Custom_Post_Type( 'Episode', 
+		 		array(
+		 			'rewrite' => array( 'with_front' => false, 'slug' => get_page_uri($episodes_page->ID) ),
+		 			'capability_type' => 'post',
+		 		 	'publicly_queryable' => true,
+		   			'has_archive' => true, 
+		    		'hierarchical' => false,
+		    		'exclude_from_search' => true,
+		    		'menu_position' => null,
+		    		'supports' => array('title', 'thumbnail', 'editor', 'page-attributes'),
+		    		'plural' => 'Episodes'
+		   		)
+		   	);
+		}
 
 		$rider = new Custom_Post_Type( 'Rider', 
 	 		array(

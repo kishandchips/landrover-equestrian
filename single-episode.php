@@ -34,7 +34,7 @@ get_header(); ?>
 				</div>
 				<div class="featured-image">
 					<?php 
-					$image_id = get_post_thumbnail_id($next_episode->ID);
+					$image_id = get_post_thumbnail_id($post->ID);
 				    $image = wp_get_attachment_image_src( $image_id, 'custom_medium' ); ?>
 					<img src="<?php echo $image[0]; ?>" alt="<?php the_title(); ?>" class="scale"/>
 					<div class="overlay"></div>
@@ -65,8 +65,8 @@ get_header(); ?>
 			<?php else: ?>
 			<div class="span four right notify">
 				<h5 class="orange uppercase no-margin landrover-medium"><?php _e("Don't miss this episode", THEME_NAME); ?></h5>
-				<p class="bold no-margin"><?php _e("Be notified as soon as this episode is available.", THEME_NAME); ?></p>
-				<p><a class="notify-btn white-btn"><?php _e("Notify me", THEME_NAME);?></a></p>
+				<!--p class="bold no-margin"><?php _e("Be notified as soon as this episode is available.", THEME_NAME); ?></p-->
+				<?php gravity_form(2, false, true); ?>
 			</div>
 			<?php endif; ?>
 		</div>
@@ -77,13 +77,14 @@ get_header(); ?>
 			<div class="inner">
 				<?php $prev_episode = get_the_adjacent_fukn_post('prev', 'episode'); ?>
 				<?php if($prev_episode): ?>
-				<a href="<?php echo get_permalink($prev_episode->ID); ?>" class="alpha span four previous dark-grey">
+				<a href="<?php echo get_permalink($prev_episode->ID); ?>" class="episode alpha span four previous dark-grey">
 					<div class="span five featured-image shadow-3d alpha omega">
 						<?php
 		                $image_id = get_post_thumbnail_id($prev_episode->ID);
 		                $image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
 		                ?>
 		                <img src="<?php echo $image[0]?>" class="scale" />
+		                <div class="overlay"></div>
 					</div>
 					<div class="content span five">
 						<p class="landrover-light uppercase no-margin">Previous Episode</p>
@@ -93,7 +94,7 @@ get_header(); ?>
 				<?php endif; ?>
 				<?php $next_episode = get_the_adjacent_fukn_post('next', 'episode'); ?>
 				<?php if($next_episode): ?>
-				<a href="<?php echo get_permalink($next_episode->ID); ?>" class="omega span four previous dark-grey right">
+				<a href="<?php echo get_permalink($next_episode->ID); ?>" class="episode omega span four previous dark-grey right">
 					
 					<div class="content span five text-right">
 						<p class="landrover-light uppercase no-margin">Next Episode</p>
@@ -105,6 +106,7 @@ get_header(); ?>
 		                $image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
 		                ?>
 		                <img src="<?php echo $image[0]?>" class="scale" />
+	   	                <div class="overlay"></div>
 					</div>
 				</a>
 				<?php endif; ?>

@@ -64,11 +64,15 @@
 					content = main.lightbox.content,
 					loader = main.lightbox.loader,
 					documentHeight = $(document).height(),
-					ajaxUrl = main.ajaxUrl(url);
+					windowHeight = $(window).height(),
+					scrollTop = $(window).scrollTop(),
+					ajaxUrl = main.addToUrl(url, 'ajax'),
+					ajaxUrl = main.addToUrl(ajaxUrl, 'lightbox');
 
 				container.height(documentHeight);
 				container.show();
 				loader.fadeIn();
+				content.hide();
 				overlay.fadeIn('slow', function(){
 					
 					$.get(ajaxUrl, function(data) {
@@ -77,16 +81,20 @@
 							
 							if($.fn.imagesLoaded){
 								content.imagesLoaded(function(){
-									var top = (documentHeight - content.height()) / 2;
+									var top = scrollTop + (windowHeight - content.height()) / 2;
+									if(top + content.height() > documentHeight - 60){
+										top = documentHeight - content.height() - 60;
+									}
 									content.animate({top: top}, function(){
-										container.css({'height': 'auto'});
 										content.fadeIn();
-										container.slideDown('slow');
 									});
 								});
 							} else {
-								container.animate({'height': content.actual('height')}, function(){
-									container.css({'height': 'auto'});
+								var top = scrollTop + (windowHeight - content.height()) / 2;
+								if(top + content.height() > documentHeight - 60){
+									top = documentHeight - content.height() - 60;
+								}
+								container.animate({top: top}, function(){
 									content.fadeIn();
 								});
 							}	
@@ -117,7 +125,7 @@
 						var accordion = $(this),
 							width = accordion.width(),
 							totalItems = accordion.children().size(),
-							tabWidth = (accordion.data('tab-width')) ? accordion.data('tab-width') : 30
+							tabWidth = (accordion.data('tab-width')) ? accordion.data('tab-width') : 32
 							resizeChildren = (accordion.data('resize-children')) ? accordion.data('resize-children') : true,
 							options = {
 							//	easing: 'easeOutBounce',
@@ -125,7 +133,7 @@
 								slideClass: 'item',
 								tabWidth: tabWidth,
 								width: width,
-								height: 400,
+								height: 330,
 								animationComplete: function(){
 									var item = $(this);
 									item.addClass(options.slideClass + '-opened')
@@ -207,7 +215,22 @@
 				});
 
 				main.competition.init();
-			}
+				main.notification.init();
+			},
+			checkPermissions: function(permissions, callback){
+				FB.api('/me/permissions', function(response){
+					var enabledPermissions = response.data[0],
+						authorized = false;
+					for(var i in permissions){
+						var permission = permissions[i];
+						if(enabledPermissions[permission]){
+							authorized = true;
+						} 
+					}
+
+					callback(authorized);
+				});
+			},
 		},
 
 		competition: {
@@ -220,49 +243,58 @@
 					facebook = main.competition.facebook = {
 						input: $('#input_1_4', form)
 					},
+					accessToken = main.competition.accessToken = {
+						input: $('#input_1_5', form)
+					},
 					permissions = main.competition.permissions = ['email'];
-							
-				FB.getLoginStatus(function(response) {
-					if (response.status === 'connected') {
-						main.competition.checkPermissions(function(authorized){
-							if(authorized){
-								FB.api('/me', function(response){
-									email.input.val(response.email);
-								});
+				if(form.length > 0){	
+					FB.getLoginStatus(function(loginResponse) {
+						if (loginResponse.status === 'connected') {
+							main.facebook.checkPermissions(permissions, function(authorized){
+								if(authorized){
+									FB.api('/me', function(response){
+										email.input.val(response.email);
+										accessToken.input.val(loginResponse.authResponse.accessToken);
+									});
+								}
+							});
+						} else {
+							if(form.parent().hasClass('gform_validation_error')){
+								email.field.show();	
 							}
-						});
-					} else {
-						if(form.parent().hasClass('gform_validation_error')){
-							email.field.show();	
 						}
-					}
-				});
-				form.on('submit', main.competition.submit);
+					});
+					form.on('submit', main.competition.submit);
+				}
 			},
 
 			submit: function(){
 				var form = main.competition.form,
 					email = main.competition.email,
-					facebook = main.competition.facebook;
+					facebook = main.competition.facebook,
+					accessToken = main.competition.accessToken,
+					permissions = main.competition.permission;
+
 				if(email.input.val()){
-					return true;
+					return false;
 				} else {
-					FB.getLoginStatus(function(response) {
+					FB.getLoginStatus(function(loginResponse) {
 						
-						if (response.status === 'connected') {
-							main.competition.checkPermissions(function(authorized){
+						if (loginResponse.status === 'connected') {
+							main.facebook.checkPermissions(permissioons, function(authorized){
 								
 								if(authorized){
 									FB.api('/me', function(response){
 										email.input.val(response.email);
 										facebook.input.val('1');
+										accessToken.input.val(loginResponse.authResponse.accessToken);
 										form.submit();
 									});
 								} else {
 									main.competition.authorize();
 								}
 							});
-						} else if (response.status === 'not_authorized') {
+						} else if (loginResponse.status === 'not_authorized') {
 							main.competition.authorize();
 						} else {
 							FB.login(function(response){
@@ -279,27 +311,89 @@
 					return false;
 				}
 			},
-			checkPermissions: function(callback){
-				FB.api('/me/permissions', function(response){
-					var permissions = main.competition.permissions,
-						enabledPermissions = response.data[0],
-						authorized = false;
-					for(var i in permissions){
-						var permission = permissions[i];
-						if(enabledPermissions[permission]){
-							authorized = true;
-						} 
-					}
-
-					callback(authorized);
-				});
-			},
 			authorize: function(){
 				FB.ui({
 					method: 'oauth',
 					scope: main.competition.permissions.join(',')
 				}, function(e){
 					main.competition.form.submit();
+				});
+			}
+		},
+
+		notification: {
+			init: function(){
+				var form = main.notification.form = $('.notification'),
+					email = main.notification.email = {
+						input: $('#input_2_1', form)
+					},
+					accessToken = main.notification.accessToken = {
+						input: $('#input_2_2', form)
+					},
+					permissions = main.notification.permissions = ['email'];
+				
+				if(form.length > 0){		
+					FB.getLoginStatus(function(loginResponse) {
+						if (loginResponse.status === 'connected') {
+							main.facebook.checkPermissions(permissions, function(authorized){
+								if(authorized){
+									FB.api('/me', function(response){
+										email.input.val(response.email);
+										accessToken.input.val(loginResponse.authResponse.accessToken);
+									});
+								}
+							});
+						}
+					});
+					form.on('submit', main.notification.submit);
+				}
+			},
+
+			submit: function(){
+				var form = main.notification.form,
+					email = main.notification.email,
+					accessToken = main.notification.accessToken,
+					permissions = main.notification.permissions;
+
+				if(email.input.val()){
+					return true;
+				} else {
+					FB.getLoginStatus(function(loginResponse) {
+						
+						if (loginResponse.status === 'connected') {
+							main.facebook.checkPermissions(permissions, function(authorized){
+								
+								if(authorized){
+									FB.api('/me', function(response){
+										email.input.val(response.email);
+										accessToken.input.val(loginResponse.authResponse.accessToken);
+										form.submit();
+									});
+								} else {
+									main.notification.authorize();
+								}
+							});
+						} else if (loginResponse.status === 'not_authorized') {
+							main.notification.authorize();
+						} else {
+							FB.login(function(response){
+								if(response.status === 'connected'){
+									form.submit();
+								}
+							}, {scope: main.notification.permissions.join(',')});
+						}
+					});
+
+					return false;
+				}
+			},
+			
+			authorize: function(){
+				FB.ui({
+					method: 'oauth',
+					scope: main.notification.permissions.join(',')
+				}, function(e){
+					main.notification.form.submit();
 				});
 			}
 		},
@@ -319,7 +413,7 @@
 			load: function(url){
 
 				var container = main.ajaxPage.container,
-					ajaxUrl = main.ajaxUrl(url);
+					ajaxUrl = main.addToUrl(url, 'ajax');
 
 				
 				container.slideDown(2000);
@@ -384,19 +478,19 @@
 			}
 		},
 
-		ajaxUrl: function(url){
-			var regex = new RegExp('(\\?|\\&)ajax=.*?(?=(&|$))'),
+		addToUrl: function(url, query){
+			var regex = new RegExp('(\\?|\\&)'+query+'=.*?(?=(&|$))'),
 		        qstring = /\?.+$/;
 
 			if (regex.test(url)){
-		        ajaxUrl = url.replace(regex, '$1ajax=true');
+		        url = url.replace(regex, '$1'+query+'=true');
 		    } else if (qstring.test(url)) {
-		        ajaxUrl = url + '&ajax=true';
+		        url = url + '&'+query+'=true';
 		    } else {
-		        ajaxUrl =  url + '?ajax=true';
+		        url =  url + '?'+query+'=true';
 		    }
 
-		    return ajaxUrl;		
+		    return url;		
 		},
 
 		equalHeight: function(){

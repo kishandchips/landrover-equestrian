@@ -13,16 +13,23 @@
 get_header(); ?>
 
 <div id="archive-episode">
+<?php global $wp_query;
+query_posts( array_merge( $wp_query->query_vars, array( 'orderby' => 'menu_order', 'order' => 'ASC' ) ) );
+?>
 <?php $i = 0; ?>
 <?php while ( have_posts() ) : the_post(); ?>
+	<?php 
+	$image_id = get_post_thumbnail_id($post->ID);
+    $image = wp_get_attachment_image_src( $image_id, 'custom_large' ); ?>
 	<?php if($i > 0): ?><div class="divider"></div><?php endif; ?>
 	<div class="episode">
-		<div class="inner container" style="background: url(http://www.carsuk.net/wp-content/gallery/land-rover-lrx-concept/land-rover-lrx-1.jpg);">
+		<div class="inner container" style="background: url(<?php echo $image[0]; ?>);">
 			<div class="content">
-				<h2 class="title"><?php _e("Episode", THEME_NAME); echo ' '; the_field('episode_number'); echo ': <span class="orange">'; the_title(); ?></span></h2> 
+				<h2 class="title"><?php the_title(); ?></h2> 
 				<h6 class="sub-title"><?php the_field('sub_title'); ?></h6>
 				<p><a href="<?php the_permalink(); ?>" class="white-btn"><?php _e("Play this episode", THEME_NAME); ?></a>
 			</div>
+			<div class="overlay"></div>
 		</div>
 	</div>
 	<?php $i++; ?>

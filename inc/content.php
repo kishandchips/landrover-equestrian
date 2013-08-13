@@ -56,15 +56,17 @@
 			<div class="accordion-container container">
 				<ul class="accordion">
 					<?php while (has_sub_field('items', $id)) : ?>
+					<?php $bg_image = get_sub_field('background_image'); ?>
 					<?php $ajax_page = get_sub_field('ajax_page', $id); ?>
-					<li class="item <?php if($ajax_page) echo 'ajax-btn'; ?>" href="<?php echo get_permalink($ajax_page->ID); ?>" style="background-image: url(http://www.carsuk.net/wp-content/gallery/land-rover-lrx-concept/land-rover-lrx-1.jpg);">
+					<li class="item <?php if($ajax_page) echo 'ajax-btn'; ?>" href="<?php echo get_permalink($ajax_page->ID); ?>" style="background-image: url(<?php echo $bg_image['sizes']['accordion']; ?>);">
 						<footer class="footer">
 							<button class="btn"><?php the_sub_field('title'); ?></button>
 						</footer>
 						<div class="content">
-							<h2><?php the_sub_field('title'); ?></h2>
+							<h2 class="no-margin"><?php the_sub_field('title'); ?></h2>
 							<?php the_sub_field('sub_title'); ?>
 						</div>
+						<div class="overlay"></div>
 					</li>
 					<?php endwhile; ?>
 				</ul>
@@ -75,20 +77,23 @@
 			<div id="ajax-page"></div>
 			<?php break; ?>
 		<?php case 'episodes': 
-			$query = new WP_Query(array('post_type' => 'episode', 'posts_per_page' => -1)); 
+			$query = new WP_Query(array('post_type' => 'episode', 'posts_per_page' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' )); 
 			if($query->have_posts()):
 			?>
 			<div class="container episodes">
 				<div class="scroller" data-resize="true">
 					<div class="scroller-mask">
 						<?php while($query->have_posts()): $query->the_post(); ?>
-						<div class="scroll-item" data-id="<?php the_ID(); ?>" style="background: url(http://www.carsuk.net/wp-content/gallery/land-rover-lrx-concept/land-rover-lrx-1.jpg);">
+						<?php 
+						$image_id = get_post_thumbnail_id($post->ID);
+					    $image = wp_get_attachment_image_src( $image_id, 'custom_large' ); ?>
+						<div class="scroll-item" data-id="<?php the_ID(); ?>" style="background-image: url(<?php echo $image[0]; ?>);">
 							<div class="content">
-								<h2 class="episodes-title no-margin"><?php _e("The Episodes", THEME_NAME); ?></h2>
-								<h5 class="title no-margin"><?php _e("Episode", THEME_NAME); echo ' '; the_field('episode_number'); echo ': '; the_title(); ?></h5> 
-								<p class="sub-title"><?php the_field('sub_title'); ?></p>
+								<h2 class="episodes-title no-margin"><?php the_title(); ?></h2>
+								<p class="landrover-light uppercase sub-title"><?php the_field('sub_title'); ?></p>
 								<p><a href="<?php the_permalink(); ?>" class="white-btn"><?php _e("Play this episode", THEME_NAME); ?></a>
 							</div>
+							<div class="overlay"></div>
 						</div>
 						<?php endwhile; ?>
 					</div>
@@ -113,8 +118,8 @@
 			<?php wp_reset_postdata(); ?>
 			<?php endif; ?>
 			<?php break; ?>
-		<?php case 'riders': 
-			$query = new WP_Query(array('post_type' => 'rider', 'posts_per_page' => -1)); 
+		<?php case 'riders':
+			$query = new WP_Query(array('post_type' => 'rider', 'posts_per_page' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' )); 
 			if($query->have_posts()):
 				wp_enqueue_script('accordion');
 			?>
@@ -124,7 +129,7 @@
 						<h2><?php the_sub_field('title'); ?></h2>
 						<p class="landrover-light"><?php the_sub_field('sub_title'); ?></p>
 					</header>
-					<ul class="riders-accordion accordion" data-tab-width="120"  data-resize-children="false">
+					<ul class="riders-accordion accordion" data-tab-width="120"  data-height="400"  data-resize-children="false">
 						<?php while($query->have_posts()): $query->the_post(); ?>
 						<li class="item rider" data-id="<?php the_ID(); ?>">
 							<div class="inner">
@@ -146,7 +151,7 @@
 			<?php endif; ?>
 			<?php break; ?>
 		<?php case 'disciplines': 
-			$query = new WP_Query(array('post_type' => 'discipline', 'posts_per_page' => -1)); 
+			$query = new WP_Query(array('post_type' => 'discipline', 'posts_per_page' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' )); 
 			if($query->have_posts()):
 			?>
 			<div class="disciplines">

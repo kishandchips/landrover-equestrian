@@ -10,12 +10,12 @@
  * @package landrover
  * @since landrover 1.0
  */
-
+$lightbox = (isset($_GET['lightbox']) && $_GET['lightbox'] == true) ? true : false;
 get_header(); ?>
-
-<div id="page">
+<?php if(!$lightbox): ?>
+<div id="index">
 	<?php while ( have_posts() ) : the_post(); ?>
-	<div id="content" <?php post_class(); ?>>
+	<div class="content" <?php post_class(); ?>>
 		<?php if(!$post->post_content == ''): ?>
 		<div class="page-content container">
 			<div class="span"><?php the_content(); ?></div>
@@ -26,6 +26,31 @@ get_header(); ?>
 		<?php endif; ?>
 	</div>
 	<?php endwhile; // end of the loop. ?>
+</div><!-- #index -->
 
-</div><!-- #page -->
+<?php else: ?>
+<div id="index-lightbox">
+	<div class="inner">
+		<?php while ( have_posts() ) : the_post(); ?>
+		<header class="header">
+			<h4 class="no-margin"><?php the_title(); ?></h4>
+			<button class="close-btn"></button>
+		</header>
+		<div class="content" <?php post_class(); ?>>
+			<?php if(!$post->post_content == ''): ?>
+			<div class="page-content container">
+				<div class="span"><?php the_content(); ?></div>
+			</div>
+			<?php endif; ?>
+			<?php if ( get_field('content')):?>
+			<?php get_template_part('inc/content'); ?>
+			<?php endif; ?>
+		</div>
+		<footer class="footer">
+			<p class="text-center no-margin"><button class="close-btn">&nbsp;&nbsp;<?php _e("Close window", THEME_NAME); ?></button></p>
+		</footer>
+		<?php endwhile; // end of the loop. ?>
+	</div>
+</div><!-- #index -->
+<?php endif; ?>
 <?php get_footer(); ?>

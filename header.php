@@ -19,7 +19,6 @@ if(!$ajax):
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta name="viewport" content="width=device-width" />
 	<title><?php wp_title( '|', true, 'right' ); ?></title>
 	<link href="<?php echo get_template_directory_uri(); ?>/images/misc/favicon.png" rel="shortcut icon" type="image/x-icon">
     
@@ -72,7 +71,7 @@ if(!$ajax):
 	<header id="header" role="banner">
 		<div class="inner container">
 			<h1 class="logo-container">
-				<a class="logo" href="<?php echo home_url( '/' ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
+				<a class="logo" href="<?php echo get_permalink( get_field('homepage', 'options') ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
 				<?php if(!is_front_page()): ?>
 				<span class="description">
 					<?php _e("Supporting<br />British Equestrian", THEME_NAME); ?>
@@ -81,7 +80,7 @@ if(!$ajax):
 			</h1>
 			<?php if(!is_front_page()): ?>
 			<div class="navigation-container">
-				<button class="mobile-navigation-btn uppercase">menu <i aria-hidden="true" class="icon-arrow-down tiny"></i></button>
+				<!--button class="mobile-navigation-btn uppercase">menu <i aria-hidden="true" class="icon-arrow-down tiny"></i></button-->
 				<nav role="navigation" class="site-navigation main-navigation">
 					<?php wp_nav_menu( array( 'theme_location' => 'primary_header', 'menu_class' => 'clearfix menu', 'container' => false ) ); ?>
 				</nav><!-- .site-navigation .main-navigation -->
