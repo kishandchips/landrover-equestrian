@@ -55,10 +55,11 @@
 			<?php wp_enqueue_script('accordion'); ?>
 			<div class="accordion-container container">
 				<ul class="accordion">
+					<?php $i = 0; ?>
 					<?php while (has_sub_field('items', $id)) : ?>
 					<?php $bg_image = get_sub_field('background_image'); ?>
 					<?php $ajax_page = get_sub_field('ajax_page', $id); ?>
-					<li class="item <?php if($ajax_page) echo 'ajax-btn'; ?>" href="<?php echo get_permalink($ajax_page->ID); ?>" style="background-image: url(<?php echo $bg_image['sizes']['accordion']; ?>);">
+					<li class="item <?php if($i == 0) echo 'current'; ?> <?php if($ajax_page) echo 'ajax-btn'; ?>" href="<?php echo get_permalink($ajax_page->ID); ?>" style="background-image: url(<?php echo $bg_image['sizes']['accordion']; ?>);">
 						<footer class="footer">
 							<button class="btn"><?php the_sub_field('title'); ?></button>
 						</footer>
@@ -68,6 +69,7 @@
 						</div>
 						<div class="overlay"></div>
 					</li>
+					<?php $i++; ?>
 					<?php endwhile; ?>
 				</ul>
 			</div>
@@ -141,6 +143,7 @@
 									<button class="close-btn btn"></button>
 									<?php the_content(); ?>
 								</div>
+								<div class="overlay"></div>
 							</div>
 						</li>
 						<?php endwhile; ?>
@@ -167,6 +170,7 @@
 							<a href="<?php the_permalink(); ?>" class="ajax-btn">
 								<div class="featured-image">
 									<?php the_post_thumbnail('full', array('class' => 'scale'));?>
+									<div class="overlay"></div>
 								</div>
 								<button class="btn blue-btn"><?php the_title(); ?></button>
 							</a>

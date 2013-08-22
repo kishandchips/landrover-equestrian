@@ -41,6 +41,7 @@
 			FB.Canvas.setAutoGrow();
 			FB.Canvas.setSize( {height: $(window).height()});
 			this.equalHeight();
+			
 		},
 
 		lightbox: {
@@ -154,6 +155,12 @@
 
 						accordion.accordion(options);
 
+						$(window).on('load', function(){
+							setTimeout(function(){
+								$('.item.current', accordion).trigger('click');					
+							}, 1000);
+						});
+
 					});
 				}
 			}
@@ -202,7 +209,7 @@
 				// ///DELETE
 				FB.getLoginStatus(function(response) {
 					if (response.status === 'connected') {
-					//	FB.logout();
+						FB.logout();
 					}
 				});
 	
@@ -240,6 +247,13 @@
 						field: $('#field_1_3', form),
 						input: $('#input_1_3', form)
 					},
+					name = main.competition.name = {
+						field: $('#field_1_6', form),
+						input: {
+							firstName: $('#input_1_6_3', form),
+							lastName: $('#input_1_6_6', form)
+						}
+					},
 					facebook = main.competition.facebook = {
 						input: $('#input_1_4', form)
 					},
@@ -251,9 +265,12 @@
 					FB.getLoginStatus(function(loginResponse) {
 						if (loginResponse.status === 'connected') {
 							main.facebook.checkPermissions(permissions, function(authorized){
+
 								if(authorized){
 									FB.api('/me', function(response){
 										email.input.val(response.email);
+										name.input.firstName.val(response.first_name);
+										name.input.lastName.val(response.last_name);
 										accessToken.input.val(loginResponse.authResponse.accessToken);
 									});
 								}
@@ -261,6 +278,7 @@
 						} else {
 							if(form.parent().hasClass('gform_validation_error')){
 								email.field.show();	
+								name.field.show();
 							}
 						}
 					});
@@ -271,21 +289,25 @@
 			submit: function(){
 				var form = main.competition.form,
 					email = main.competition.email,
+					name = main.competition.name,
 					facebook = main.competition.facebook,
 					accessToken = main.competition.accessToken,
 					permissions = main.competition.permission;
 
+
 				if(email.input.val()){
-					return false;
+					return true;
 				} else {
 					FB.getLoginStatus(function(loginResponse) {
 						
 						if (loginResponse.status === 'connected') {
-							main.facebook.checkPermissions(permissioons, function(authorized){
+							main.facebook.checkPermissions(permissions, function(authorized){
 								
 								if(authorized){
 									FB.api('/me', function(response){
 										email.input.val(response.email);
+										name.input.firstName.val(response.first_name);
+										name.input.lastName.val(response.last_name);
 										facebook.input.val('1');
 										accessToken.input.val(loginResponse.authResponse.accessToken);
 										form.submit();
@@ -303,6 +325,7 @@
 								} else {
 									alert('If you would not like to login with Facebook, please enter your email address');
 									email.field.show();
+									name.field.show();
 								}
 							}, {scope: main.competition.permissions.join(',')});
 						}
@@ -330,7 +353,7 @@
 					accessToken = main.notification.accessToken = {
 						input: $('#input_2_2', form)
 					},
-					permissions = main.notification.permissions = ['email'];
+					permissions = main.notification.permissions = ['email', 'publish_actions'];
 				
 				if(form.length > 0){		
 					FB.getLoginStatus(function(loginResponse) {

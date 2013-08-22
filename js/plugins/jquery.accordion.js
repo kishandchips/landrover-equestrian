@@ -9,7 +9,7 @@
 	"use strict";
 	$.fn.accordion = function (method) {
 		var defaults = {
-			timeout: 6000, /* Time between each slide (in ms). */
+			timeout: 5000, /* Time between each slide (in ms). */
 			width: null, /* Width of the container. This option is required. */
 			slideWidth: null, /* Width of each slide in pixels or width of each slide compared to a 100% container. */
 			tabWidth: null, /* Width of each slide's "tab" (when clicked it opens the slide) or width of each tab compared to a 100% container. */

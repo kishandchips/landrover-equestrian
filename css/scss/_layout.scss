@@ -47,6 +47,8 @@ body {
 
 #wrap {
 	position: relative;
+	width: 810px;
+	margin: 0 auto;
 	z-index: 500;
 }
 
@@ -350,7 +352,6 @@ body {
 			.content {
 				background: #000;
 				background: rgba(#000, 0.5);
-
 			}
 		}
 
@@ -382,7 +383,5 @@ body {
 				margin: 1em 0;
 			}
 		}
-
-
 	}
 }
