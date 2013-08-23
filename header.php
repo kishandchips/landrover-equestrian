@@ -50,9 +50,10 @@ if(!$ajax):
 		wp_deregister_script('accordion');
 		wp_register_script('accordion', get_template_directory_uri().'/js/plugins/jquery.accordion.js', array('jquery'), '', true);
 		wp_enqueue_script('main', get_template_directory_uri().'/js/main.js', array('jquery'), '', true);
+		wp_register_script('youtube', 'http://www.youtube.com/player_api', false, '', true);
 
 		wp_deregister_script('wc-add-to-cart-variation');
-		wp_register_script( 'wc-add-to-cart-variation', get_template_directory_uri().'/js/plugins/jquery.add-to-cart-variation.js', array( 'jquery' ), '', true );
+		wp_register_script('wc-add-to-cart-variation', get_template_directory_uri().'/js/plugins/jquery.add-to-cart-variation.js', array( 'jquery' ), '', true );
 	}
 	add_action('wp_enqueue_scripts', 'load_assets');
 	wp_head();
@@ -74,7 +75,7 @@ if(!$ajax):
 				<a class="logo" href="<?php echo get_permalink( get_field('homepage', 'options') ); ?>" title="<?php echo esc_attr( get_bloginfo( 'name', 'display' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a>
 				<?php if(!is_front_page()): ?>
 				<span class="description">
-					<?php _e("Supporting<br />British Equestrian", THEME_NAME); ?>
+					<?php _e("Equestrian:<br />The pursuit of Excellence", THEME_NAME); ?>
 				</span>
 				<?php endif; ?>
 			</h1>

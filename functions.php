@@ -461,3 +461,29 @@ if ( ! function_exists( 'custom_submit_button' )) {
         return $button_input;
 	}
 }
+
+add_filter('gform_pre_submission', 'pre_submission', 10, 3);
+
+if ( ! function_exists( 'pre_submission' )) { 
+	function pre_submission($form){
+		$access_token_name = '';
+		if($form['id'] == 1 && isset($_POST['input_5'])){
+			$access_token_name = 'input_5';
+		} else if($form['id'] == 2 && isset($_POST['input_2'])){
+			$access_token_name = 'input_2';
+		}
+
+		if($access_token_name){
+			require( get_template_directory() . '/inc/facebook/facebook.php' );
+
+			$facebook = new Facebook(array(
+				'appId'  => '579639135402354',
+				'secret' => 'fc9ff4a35bc72f8cbe080128ef0e4ff5',
+			));
+
+			$facebook->setAccessToken($_POST[$access_token_name]);
+			$facebook->setExtendedAccessToken();
+			$_POST[$access_token_name]  = $facebook->getAccessToken();
+		}
+	}
+}

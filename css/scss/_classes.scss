@@ -66,7 +66,7 @@ h2 {
 	margin: 0.5em 0;
 	@include landrover-medium;
 	@include font-size(30);
-	line-height: 0.9;
+	line-height: 1;
 	text-transform: uppercase;
 }
 
@@ -74,7 +74,7 @@ h3 {
 	margin: 0.5em 0;
 	@include landrover-medium;
 	@include font-size(25);
-	line-height: 1.3;
+	line-height: 1;
 	text-transform: uppercase;
 }
 
@@ -90,7 +90,7 @@ h5 {
 	margin: 0.5em 0;
 	@include landrover-light;
 	@include font-size(18);
-	line-height: 1.3;
+	line-height: 1;
 	text-transform: uppercase;
 }
 
@@ -118,16 +118,12 @@ p {
 	font-size: 90%;
 }
 
-.small {
-	margin: 4px 0;
+p.small {
+//	margin: 4px 0;
 }
 
 .tiny {
-	font-size: 70%;
-}
-
-p.tiny {
-	margin: 5px 0;
+	font-size: 80%;
 }
 
 .bold,
@@ -718,6 +714,7 @@ hr {
 				visibility: hidden;
 				opacity: 0;
 				z-index: 500;
+				line-height: 1.2;
 				.no-csstransforms & {
 					display: none;
 				}
@@ -912,7 +909,8 @@ hr {
 				margin-top: 0;
 				top: 0;
 				@include box-sizing(border-box);
-
+				overflow: scroll;
+				height: 100%;
 				.csstransforms & {
 					@include translateY(0);
 				}
@@ -1005,7 +1003,7 @@ hr {
 	}
 }
 
-.episodes {
+.episodes-scroller {
 	@include box-shadow(0 5px 8px -3px rgba(#000, 0.5));
 	.scroll-item {
 		height: 320px;
@@ -1121,6 +1119,84 @@ hr {
 	}
 }
 
+.episodes {
+	> .inner {
+		padding: 0 0 2em 0;
+	}
+
+	.episodes-header {
+		padding: 2em 3em 1em 3em;
+	}
+
+	.episodes-list {
+		margin: 1em 0 0 0;
+		padding: 0 1em;
+		list-style: none;
+		@extend .clearfix;
+
+		.episode {
+			float: left;
+			width: 25%;
+			color: #061730;
+			text-align: center;
+
+			&.live {
+				.featured-image {
+					img {
+						@include opacity(1);
+					}
+				}
+			}
+
+			> a {
+				display: block;
+				color: #061730;
+
+				&:hover {
+					color: #df5206;
+
+					.featured-image {
+						img {
+
+							@include transition(all 0.3s ease);
+							@include opacity(1);
+						}
+					}
+				}
+			}
+
+			.featured-image {
+				background: #FFF;
+				position: relative;
+				.play-btn {
+					@include transition(all 0.3s ease);
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					margin-left: -16px;
+					margin-top: -16px;
+				}
+
+				img {
+					@include opacity(0.6);
+				}
+
+				&:hover {
+					.play-btn {
+						@include opacity(1);
+					}
+				}
+			}
+
+			.episode-header {
+				padding: 1.5em 0 0 0;
+			}
+
+
+		}
+	}
+}
+
 
 .competition {
 	padding: 6em 0;
@@ -1230,12 +1306,16 @@ hr {
 }
 
 .notification {
-	margin: 0.8em 0 0 0;
+	margin: 0.5em 0;
 
 	.gform_heading,
 	.gform_body,
 	.gform_footer {
 		text-align: center;
+	}
+
+	.gform_heading {
+		margin-bottom: 0.6em !important;
 	}
 }
 /* =============================================================================
@@ -1278,7 +1358,7 @@ button {
 	background: #FFF;
 	border: 0;
 	padding: 0.3em 0.8em;
-
+	line-height: 1;
 	&:hover {
 		background: #ebebeb;
 	}
@@ -1289,8 +1369,9 @@ button {
 	background: #253349;
 	@include filter-gradient(#293c57, #071831);
 	@include background(linear-gradient(color-stops(#293c57, #23344d 10%, #203048 52%, #223148 53%, #071831)));
-	padding: 0.3em 1em;
+	padding: 0.4em 1em 0.2em 1em;
 	color: #FFF;
+	line-height: 1;
 	@include font-size(20);
 	text-transform: uppercase;
 	@include landrover-medium;
@@ -1316,6 +1397,7 @@ button {
 input[type=submit] {
 	display: inline-block;
 	color: #e05206;
+	line-height: 1;
 	padding: 0.9em 4em 0.8em 1.5em;
 	background: #f7f7f7;
 	@include border-radius(3px);
@@ -1401,6 +1483,7 @@ input[type=submit] {
 	display: inline-block;
 	color: #e05206;
 	background: #FFF; 
+	line-height: 1;
 	@include box-shadow(0 0 1px 0 rgba(#000, 0.8));
 	@include font-size(10);
 	font-weight: bold;
@@ -1419,6 +1502,25 @@ input[type=submit] {
 		&:before {
 			color: inherit;
 		}
+	}
+}
+
+.play-btn {
+	display: inline-block;
+	@include filter-gradient(#dfdcdf, #f3f3f3);
+	@include background(linear-gradient(#dfdcdf, #f3f3f3));
+	@include opacity(0.8);
+	@include border-radius(4px);
+	width: 32px;
+	height: 32px;
+	color: #e05206;
+	position: relative;
+	text-align: center;
+	line-height: 34px;
+	text-indent: 0px;
+	&:before {
+		content: '\25b6';
+		color: #e05206;
 	}
 }
 

@@ -45,7 +45,7 @@
 			<div class="divider">
 				<?php if(get_sub_field('title')): ?>
 				<div class="inner container">
-					<h2 class="text-center"><?php the_sub_field('title'); ?></h2>
+					<h3 class="text-center"><?php the_sub_field('title'); ?></h3>
 				</div>
 				<?php endif; ?>
 			</div>
@@ -65,7 +65,7 @@
 						</footer>
 						<div class="content">
 							<h2 class="no-margin"><?php the_sub_field('title'); ?></h2>
-							<?php the_sub_field('sub_title'); ?>
+							<p class="landrover-light uppercase no-margin"><?php the_sub_field('sub_title'); ?></p>
 						</div>
 						<div class="overlay"></div>
 					</li>
@@ -78,7 +78,7 @@
 		<?php case 'ajax_page':  ?>
 			<div id="ajax-page"></div>
 			<?php break; ?>
-		<?php case 'episodes': 
+		<?php case 'episodes_scroller': 
 			$query = new WP_Query(array('post_type' => 'episode', 'posts_per_page' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' )); 
 			if($query->have_posts()):
 			?>
@@ -115,6 +115,52 @@
 						</ul>
 						<a href="<?php the_permalink(); ?>" class="white-btn episodes-btn">Browse all episodes</a>
 					</footer>
+				</div>
+			</div>
+			<?php wp_reset_postdata(); ?>
+			<?php endif; ?>
+			<?php break; ?>
+		<?php case 'episodes': 
+			$query = new WP_Query(array('post_type' => 'episode', 'posts_per_page' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' )); 
+			if($query->have_posts()):
+			?>
+			<div class="episodes" style="<?php the_sub_field('css');?>">
+				<div class="container inner">
+					<header class="episodes-header text-center">
+						<h2 class="title text-center"><?php the_sub_field('title');?></h2>
+						<p class="landrover-light uppercase"><?php the_sub_field('sub_title'); ?></p>
+					</header>
+					<ul class="episodes-list">
+						<?php while($query->have_posts()): $query->the_post(); ?>
+						<?php 
+							$episode_date = strtotime(get_field('episode_date'));
+						    $now = strtotime('now');
+						?>
+						<?php 
+					//	$image_id = get_post_thumbnail_id($post->ID);
+					  //  $image = wp_get_attachment_image_src( $image_id, 'thumbnail' ); ?>
+						<li class="episode span one-fourth <?php if($episode_date <= $now) echo 'live'; ?>">
+							<a href="<?php the_permalink(); ?>">
+								<div class="featured-image shadow-3d">
+									<?php the_post_thumbnail('thumbnail', array('class' => 'scale')); ?>
+									<?php if($episode_date <= $now): ?>
+									<span class="play-btn"></span>
+									<?php endif; ?>
+								</div>
+								<header class="header episode-header">
+									<h5 class="landrover-medium episode-title no-margin"><?php the_title(); ?></h5>
+									<p class="tiny uppercase date no-margin">
+									<?php if($episode_date >= $now): ?>
+									<?php _e("Coming", THEME_NAME); ?> <?php echo date('d F', $episode_date); ?></p>
+									<?php else: ?>
+									<?php _e("Play this Episode", THEME_NAME); ?>
+									<?php endif; ?>
+									</p>
+								</header>
+							</a>
+						</li>
+						<?php endwhile; ?>
+					</ul>
 				</div>
 			</div>
 			<?php wp_reset_postdata(); ?>

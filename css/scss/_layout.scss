@@ -277,7 +277,6 @@ body {
 
 #single-episode {
 
-
 	#video {
 		background: url(../images/backgrounds/episode_video.jpg) no-repeat;
 		padding: 4em 4em 0 4em;
@@ -291,21 +290,45 @@ body {
 				z-index: 200;
 			}
 		}
+
+		.video-container {
+
+			.overlay {
+				.content {
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					background: #000;
+					color: #FFF;
+					text-align: center;
+					padding: 1.5em 2em 1em 2em;
+					margin: -6em 0 0 -23em;
+					.csstransforms & {
+						margin: 0;
+						@include transform(translateX(-50%) translateY(-50%));
+					} 
+				}
+			}
+		}
 	}
 
 	#content {
 		padding: 4em 2em;
 
-		.share,
-		.notify {
+		.share {
 			background: url(../images/backgrounds/episode_share.jpg) no-repeat;
 			text-align: center;
-			padding: 4em 1em;
+			padding: 1em;
 			color: #FFF;
+			margin: 0 0 1em 0;
 		}
 
 		.notify {
-			padding: 2em 1em;
+			background: url(../images/backgrounds/episode_notify.jpg) no-repeat;
+			text-align: center;
+			padding: 1em 0.5em;
+			color: #FFF;
+			margin: 0 0 1em 0;
 		}
 	}
 

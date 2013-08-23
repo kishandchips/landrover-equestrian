@@ -41,7 +41,6 @@
 			FB.Canvas.setAutoGrow();
 			FB.Canvas.setSize( {height: $(window).height()});
 			this.equalHeight();
-			
 		},
 
 		lightbox: {
@@ -207,11 +206,12 @@
 			},
 			ready: function(){
 				// ///DELETE
-				FB.getLoginStatus(function(response) {
-					if (response.status === 'connected') {
-						FB.logout();
-					}
-				});
+				//FB.getLoginStatus(function(response) {
+				//	if (response.status === 'connected') {
+					//	FB.api('/me/permissions', 'delete');
+					//	FB.logout();
+				//	}
+				//});
 	
 				$('.send-to-friends-btn').on('click', function(){
 					
@@ -221,8 +221,18 @@
 					});
 				});
 
+				$('.share-btn').on('click', function(){
+					FB.ui({
+						method: 'feed',
+						link: window.location.href,
+					}, function(response){
+
+					});
+				})
+
 				main.competition.init();
 				main.notification.init();
+				main.youtube.init();
 			},
 			checkPermissions: function(permissions, callback){
 				FB.api('/me/permissions', function(response){
@@ -317,29 +327,41 @@
 								}
 							});
 						} else if (loginResponse.status === 'not_authorized') {
-							main.competition.authorize();
+							main.competition.login();
 						} else {
-							FB.login(function(response){
-								if(response.status === 'connected'){
-									form.submit();
-								} else {
-									alert('If you would not like to login with Facebook, please enter your email address');
-									email.field.show();
-									name.field.show();
-								}
-							}, {scope: main.competition.permissions.join(',')});
+							main.competition.login();
 						}
 					});
 
 					return false;
 				}
 			},
+
+
+			login: function(){
+				form = main.competition.form,
+				email = main.competition.email,
+				name = main.competition.name;
+
+				FB.login(function(response){
+					if(response.status === 'connected'){
+						form.submit();
+					} else {
+						alert('If you would not like to login with Facebook, please enter your email address');
+						email.field.show();
+						name.field.show();
+					}
+				}, {scope: main.competition.permissions.join(',')});
+			},
+			
 			authorize: function(){
 				FB.ui({
 					method: 'oauth',
 					scope: main.competition.permissions.join(',')
-				}, function(e){
-					main.competition.form.submit();
+				}, function(response){
+					if(response){
+						main.competition.form.submit();
+					}
 				});
 			}
 		},
@@ -353,7 +375,7 @@
 					accessToken = main.notification.accessToken = {
 						input: $('#input_2_2', form)
 					},
-					permissions = main.notification.permissions = ['email', 'publish_actions'];
+					permissions = main.notification.permissions = ['email'];
 				
 				if(form.length > 0){		
 					FB.getLoginStatus(function(loginResponse) {
@@ -397,27 +419,74 @@
 								}
 							});
 						} else if (loginResponse.status === 'not_authorized') {
-							main.notification.authorize();
+							main.notification.login();
 						} else {
-							FB.login(function(response){
-								if(response.status === 'connected'){
-									form.submit();
-								}
-							}, {scope: main.notification.permissions.join(',')});
+							main.notification.login();
 						}
 					});
 
 					return false;
 				}
 			},
+
+			login: function(){
+				FB.login(function(response){
+					if(response.status === 'connected'){
+						main.notification.form.submit();
+					}
+				}, {scope: main.notification.permissions.join(',')});
+			},
 			
 			authorize: function(){
 				FB.ui({
 					method: 'oauth',
-					scope: main.notification.permissions.join(',')
-				}, function(e){
-					main.notification.form.submit();
+					scope: main.notification.permissions.join(','),
+
+				}, function(response){
+					if(response){
+						main.notification.form.submit();
+					}
 				});
+			}
+		},
+
+
+		youtube: {
+			init: function(){
+
+				var video = main.youtube.video = $('#youtube-video'),
+					overlay = main.youtube.overlay = video.parent().find('.overlay');
+					player = main.youtube.player,
+					main.youtube.authorized = false;
+
+				
+
+				if(video.length > 0){
+
+					FB.getLoginStatus(function(loginResponse) {
+						if (loginResponse.status === 'connected') {
+							main.facebook.checkPermissions(main.notification.permissions, function(authorized){
+								main.youtube.authorized = authorized;
+							});
+						}
+					});
+
+					main.youtube.player = new YT.Player('youtube-video', {
+						videoId: video.data('video-id'),
+						events: {
+							'onReady': main.youtube.onPlayerReady,
+							'onStateChange': main.youtube.onPlayerStateChange
+						}
+					});
+				}
+			},
+			onPlayerReady: function(event){
+
+			},
+			onPlayerStateChange: function(event){
+				if(event.data === 0 && !main.youtube.authorized){
+					main.youtube.overlay.fadeIn();
+				}
 			}
 		},
 
