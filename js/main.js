@@ -195,11 +195,11 @@
 				$.getScript('//connect.facebook.net/en_UK/all.js', function(){
 					FB.init({
 						appId: '579639135402354',
-						channelUrl: '//www.kishandchips.com/',
+						channelUrl: '//lrfb.occam-dm.com/channel.php',
 						status: true,
 						xfbml: true,
-						oauth: true
-
+						oauth: true,
+						frictionlessRequests: true
 					});
 					main.facebook.ready();
 				});
@@ -375,6 +375,9 @@
 					accessToken = main.notification.accessToken = {
 						input: $('#input_2_2', form)
 					},
+					userId = main.notification.userId = {
+						input: $('#input_2_3', form)
+					},
 					permissions = main.notification.permissions = ['email'];
 				
 				if(form.length > 0){		
@@ -385,6 +388,7 @@
 									FB.api('/me', function(response){
 										email.input.val(response.email);
 										accessToken.input.val(loginResponse.authResponse.accessToken);
+										userId.input.val(response.id);
 									});
 								}
 							});
@@ -398,6 +402,7 @@
 				var form = main.notification.form,
 					email = main.notification.email,
 					accessToken = main.notification.accessToken,
+					userId = main.notification.userId,
 					permissions = main.notification.permissions;
 
 				if(email.input.val()){
@@ -412,6 +417,7 @@
 									FB.api('/me', function(response){
 										email.input.val(response.email);
 										accessToken.input.val(loginResponse.authResponse.accessToken);
+										userId.input.val(response.id);
 										form.submit();
 									});
 								} else {
@@ -456,7 +462,7 @@
 
 				var video = main.youtube.video = $('#youtube-video'),
 					overlay = main.youtube.overlay = video.parent().find('.overlay');
-					player = main.youtube.player,
+					player = main.youtube.player = {},
 					main.youtube.authorized = false;
 
 				
@@ -481,7 +487,7 @@
 				}
 			},
 			onPlayerReady: function(event){
-
+				main.youtube.player.playVideo();
 			},
 			onPlayerStateChange: function(event){
 				if(event.data === 0 && !main.youtube.authorized){
@@ -501,6 +507,10 @@
 					return false;
 				});
 
+				$(document).on('click', '#ajax-page .close-btn', function(){
+					main.ajaxPage.close();
+				});
+
 			},
 			load: function(url){
 
@@ -508,17 +518,20 @@
 					ajaxUrl = main.addToUrl(url, 'ajax');
 
 				
-				container.slideDown(2000);
+				//container.slideDown(2000);
 			    if($('.content', container).length == 0){
+			    	container.show();
+			    	loader = $('<div class="loader"></div>');
+					loader.hide();
+					container.html(loader);
 
-					loader = $('<div class="loader"></div>').hide();
 					container.animate({height: loader.actual('outerHeight')}, function(){
 						loader.fadeIn();
 
 						$.get(ajaxUrl, function(data) {
-							var content = $('<div class="content"></div>').hide();
-
-							container.html(content);
+							var content = $('<div class="content"></div>');
+							content.hide();
+							container.append(content);
 							content.html(data);
 							loader.fadeOut(function(){
 								if($.fn.imagesLoaded){

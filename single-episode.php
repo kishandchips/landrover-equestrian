@@ -22,6 +22,12 @@ wp_enqueue_script('youtube');
     $now = strtotime('now');
     ?>
 	<div class="container">
+		<header class="episode-header">
+			<h2 class="no-margin title text-center">
+				<?php if(get_field('rider_title')): ?><span class="orange"><?php the_field('rider_title') ?> </span> - <?php endif; ?>
+				<?php the_title(); ?>
+			</h2>
+		</header>
 		<div id="video" class="shadow-3d">
 			<?php if($episode_date <= $now): ?>
 			<div class="video-container">
@@ -62,32 +68,36 @@ wp_enqueue_script('youtube');
 		</div>
 
 		<div id="content" <?php post_class('clearfix'); ?>>
-			<div class="span five alpha">
-				<h2 class="no-margin title"><?php 
-				//	_e("Episode ", THEME_NAME); 
-				//	the_field('episode_number'); 
-					echo '<span class="orange">'; the_title(); ?></span>
-				</h2>
-				<p class="landrover-light uppercase sub-title"><?php the_field('sub_title'); ?></p>
-				<div class="content">
+			<div class="span six alpha">
+				
+				<div class="content landrover-medium">
+					<h4 class="landrover-light uppercase sub-title"><?php the_field('sub_title'); ?></h4>
 				<?php if(!$post->post_content == '' && ($episode_date <= $now)): ?>
 					<?php the_content(); ?>
 				<?php else: ?>
-					<p class="bold"><?php _e("This episode will premierre on"); ?> <?php echo date('d/m/Y', $episode_date) ?></p>
+					<p class="bold"><?php _e("This episode will premiere on"); ?> <?php echo date('d/m/Y', $episode_date) ?></p>
 				<?php endif; ?>
+
+					<div class="fb-like" data-href="<?php the_permalink(); ?>" data-width="450" data-show-faces="true" data-send="false"></div>
 				</div>
+				<div class="comments">
+					<div class="fb-comments" data-href="<?php the_permalink(); ?>" data-width="455"></div>
+				</div>
+			</div>
 			
-			</div>
-			<?php if($episode_date < $now): ?>
-			<div class="span three right share">
-				<h5 class="orange uppercase no-margin landrover-medium"><?php _e("Share this episode", THEME_NAME); ?></h5>
-				<p><a class="share-btn white-btn"><?php _e("Post to timeline", THEME_NAME);?></a></p>
-			</div>
-			<?php endif; ?>
-			<div class="span three right notify">
-				<h5 class="orange uppercase no-margin landrover-medium"><?php _e("Keep up to date", THEME_NAME); ?></h5>
-				<!--p class="bold no-margin"><?php _e("Be notified as soon as this episode is available.", THEME_NAME); ?></p-->
-				<?php gravity_form(2, false, true); ?>
+			<div class="span three right omega alpha">
+		
+				<?php if($episode_date < $now): ?>
+				<div class="share">
+					<h5 class="orange uppercase no-margin landrover-medium"><?php _e("Share this episode", THEME_NAME); ?></h5>
+					<p><a class="share-btn white-btn"><?php _e("Post to timeline", THEME_NAME);?></a></p>
+				</div>
+				<?php endif; ?>
+				<div class="notify">
+					<h5 class="orange uppercase no-margin landrover-medium"><?php _e("Keep up to date as soon as the next episode is available", THEME_NAME); ?></h5>
+					<!--p class="bold no-margin"><?php _e("Be notified as soon as this episode is available.", THEME_NAME); ?></p-->
+					<?php gravity_form(2, false, false); ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -96,46 +106,46 @@ wp_enqueue_script('youtube');
 		<div class="container">
 			<div class="inner">
 				<?php $prev_episode = get_the_adjacent_fukn_post('prev', 'episode'); ?>
+				<?php $next_episode = get_the_adjacent_fukn_post('next', 'episode'); ?>
 				<?php if($prev_episode && get_field('episode_number') != 1): ?>
-				<a href="<?php echo get_permalink($prev_episode->ID); ?>" class="episode alpha span four previous dark-grey">
-					<div class="span five featured-image shadow-3d alpha omega">
-						<?php
-		                $image_id = get_post_thumbnail_id($prev_episode->ID);
-		                $image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
-		                ?>
-		                <img src="<?php echo $image[0]?>" class="scale" />
-		                <div class="overlay"></div>
-					</div>
-					<div class="content span five">
-						<p class="landrover-light uppercase no-margin">Previous</p>
-						<h4 class="title no-margin"><?php 
-							// _e("Episode", THEME_NAME); 
-							// echo ' '; 
-							// the_field('episode_number', $prev_episode->ID); 
-							echo '<span class="orange">'.get_the_title($prev_episode->ID); ?></spam></h4>
+				<a href="<?php echo get_permalink($prev_episode->ID); ?>" class="<?php if(get_field('episode_number') == 4) echo 'center'; ?> episode alpha span four previous dark-grey">
+					<div class="clearfix">
+						<div class="span five featured-image shadow-3d alpha omega">
+							<?php
+			                $image_id = get_post_thumbnail_id($prev_episode->ID);
+			                $image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
+			                ?>
+			                <img src="<?php echo $image[0]?>" class="scale" />
+			                <div class="overlay"></div>
+						</div>
+						<div class="content span five">
+							<p class="landrover-light uppercase no-margin">Previous</p>
+							<h6 class="title no-margin">
+								<?php if(get_field('rider_title', $prev_episode->ID)): ?><span class="orange"><?php the_field('rider_title', $prev_episode->ID) ?></span><br /><?php endif; ?>
+								<?php echo get_the_title($prev_episode->ID); ?>
+							</h6>
+						</div>
 					</div>
 				</a>
 				<?php endif; ?>
-				<?php $next_episode = get_the_adjacent_fukn_post('next', 'episode'); ?>
 				<?php if($next_episode && get_field('episode_number') != 4): ?>
-				<a href="<?php echo get_permalink($next_episode->ID); ?>" class="episode omega span four previous dark-grey right">
-					
-					<div class="content span five text-right">
-						<p class="landrover-light uppercase no-margin">Next</p>
-						<h4 class="title no-margin"><?php 
-							//_e("Episode", THEME_NAME); 
-							//echo ' '; 
-							//the_field('episode_number', $next_episode->ID); 
-							echo '<span class="orange">'.get_the_title($next_episode->ID); ?></spam>
-						</h4>
-					</div>
-					<div class="span five featured-image shadow-3d omega alpha">
-						<?php
-		                $image_id = get_post_thumbnail_id($next_episode->ID);
-		                $image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
-		                ?>
-		                <img src="<?php echo $image[0]?>" class="scale" />
-	   	                <div class="overlay"></div>
+				<a href="<?php echo get_permalink($next_episode->ID); ?>" class="<?php if(get_field('episode_number') == 1) echo 'center'; ?> episode omega span four next dark-grey right">
+					<div class="clearfix">
+						<div class="content span five text-right">
+							<p class="landrover-light uppercase no-margin">Next</p>
+							<h6 class="title no-margin">
+								<?php if(get_field('rider_title', $next_episode->ID)): ?><span class="orange"><?php the_field('rider_title', $next_episode->ID) ?></span><br /><?php endif; ?>
+								<?php echo get_the_title($next_episode->ID); ?>
+							</h6>
+						</div>
+						<div class="span five featured-image shadow-3d omega alpha">
+							<?php
+			                $image_id = get_post_thumbnail_id($next_episode->ID);
+			                $image = wp_get_attachment_image_src( $image_id, 'thumbnail' );
+			                ?>
+			                <img src="<?php echo $image[0]?>" class="scale" />
+		   	                <div class="overlay"></div>
+						</div>
 					</div>
 				</a>
 				<?php endif; ?>

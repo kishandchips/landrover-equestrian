@@ -434,11 +434,11 @@ add_filter('gform_submit_button', 'custom_submit_button', 10, 2);
 if ( ! function_exists( 'custom_submit_button' )) { 
 	function custom_submit_button($button_input, $form){
 		$form_id = $form["id"];
-		$button_input_id = "gform_submit_button_{$form["id"]}";
+		$button_input_id = 'gform_submit_button_'.$form['id'];
 		$button = $form["button"];
-		$default_text = __("Submit", "gravityforms");
+		$default_text = __("Submit", 'gravityforms');
 		$class = "button gform_button";
-		$alt = __("Submit", "gravityforms");
+		$alt = __("Submit", 'gravityforms');
 		$target_page_number = 0;
 
 		$tabindex = GFCommon::get_tabindex();
@@ -477,8 +477,8 @@ if ( ! function_exists( 'pre_submission' )) {
 			require( get_template_directory() . '/inc/facebook/facebook.php' );
 
 			$facebook = new Facebook(array(
-				'appId'  => '579639135402354',
-				'secret' => 'fc9ff4a35bc72f8cbe080128ef0e4ff5',
+				'appId'  => FB_APP_ID,
+				'secret' => FB_APP_SECRET,
 			));
 
 			$facebook->setAccessToken($_POST[$access_token_name]);
@@ -487,3 +487,36 @@ if ( ! function_exists( 'pre_submission' )) {
 		}
 	}
 }
+
+
+add_action('init', 'send_facebook_notifications');
+
+if ( ! function_exists( 'send_facebook_notifications' )) { 
+	function send_facebook_notifications(){
+		if(current_user_can('manage_options') && isset($_GET['send_notifications'])){
+			// $batched_request = array();
+
+			// foreach ($users as $idx => $user) {
+
+			// 	$request = array(
+			// 		'method'  => 'POST',
+			// 		'relative_url'  => '/' . $user['id'].'/notifications',
+			// 		'access_token' => $app_access_token,                                    
+			// 		'template' => $template,                                    
+			// 		'href' => $href        
+			// 	); 
+
+			// 	$batched_request[] = json_encode($request); 
+
+			// }
+
+			// $params = array('batch' => '[' . implode(',',$batched_request) . ']' );
+			// try {
+			// 	$response = $facebook->api('/','POST',$params);
+			// } catch(FacebookApiException $e) {
+			// 	 error_log($e);               
+			// }
+		}
+	}
+}
+

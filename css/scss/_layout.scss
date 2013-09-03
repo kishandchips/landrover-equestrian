@@ -34,7 +34,7 @@ body {
 	color: #333333;
 	@include arial;
 	@include font-size(13);
-	line-height: 1.35;
+	line-height: 1.5;
 	min-width: 250px;
 	overflow-x: hidden;
 	// @include device-width(6) {
@@ -149,7 +149,11 @@ body {
 				 	// }
 			 	}
 
-			 	> a:hover,
+			 	> a:hover {
+			 		color: #061730;
+			 		border-bottom: 2px solid #061730;
+			 	}
+
 			 	&.current_page_parent > a,
 			 	&.current-menu-item > a,
 			 	&.current-category-ancestor > a,
@@ -157,7 +161,8 @@ body {
 			 	&.current-post-ancestor > a,
 			 	&.current-menu-parent > a,
 			 	&.current-post-parent > a,
-			 	&.current > a {
+			 	&.current > a,
+			 	.single-episode &.menu-item-1684 > a {
 			 		color: #e05206;
 			 		border-bottom: 2px solid #e05206;
 			 	}
@@ -202,8 +207,27 @@ body {
 		position: absolute;
 		left: 50%;
 		top: 50%;
-		margin-top: -16px;
+		margin-top: -26px;
 		margin-left: -16px;
+	}
+
+	&.show-close-btn {
+
+		> .content {
+			> .close-btn {
+				display: block;
+			}
+		}
+	}
+
+	> .content {
+		> .close-btn {
+			display: none;
+			position: absolute;
+			top: 2em;
+			right: 2em;
+			z-index: 600;
+		}
 	}
 }
 
@@ -276,10 +300,13 @@ body {
 #error {}
 
 #single-episode {
+	background: url(../images/backgrounds/episode_video.jpg) no-repeat;
+	.episode-header {
+		padding: 3em 4em 0.5em 4em;
+	}
 
 	#video {
-		background: url(../images/backgrounds/episode_video.jpg) no-repeat;
-		padding: 4em 4em 0 4em;
+		padding: 0em 4em 0 4em;
 		.coming-soon {
 			.content {
 				position: absolute;
@@ -315,10 +342,14 @@ body {
 	#content {
 		padding: 4em 2em;
 
+		.content {
+			padding-right: 2em;
+		}
+
 		.share {
 			background: url(../images/backgrounds/episode_share.jpg) no-repeat;
 			text-align: center;
-			padding: 1em;
+			padding: 1.2em 1em 0.8em 1em;
 			color: #FFF;
 			margin: 0 0 1em 0;
 		}
@@ -326,7 +357,7 @@ body {
 		.notify {
 			background: url(../images/backgrounds/episode_notify.jpg) no-repeat;
 			text-align: center;
-			padding: 1em 0.5em;
+			padding: 1.2em 0.5em 0.8em 0.5em;
 			color: #FFF;
 			margin: 0 0 1em 0;
 		}

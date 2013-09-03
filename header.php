@@ -11,11 +11,11 @@ $ajax = (isset($_GET['ajax']) && $_GET['ajax'] == true) ? true : false;
 if(!$ajax):
 ?>
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if IE 9]>         <html class="no-js lt-ie10"> <![endif]-->
-<!--[if gt IE 9]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if IE 9]>         <html class="no-js lt-ie10" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml"> <![endif]-->
+<!--[if gt IE 9]><!--> <html class="no-js" xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="https://www.facebook.com/2008/fbml"> <!--<![endif]-->
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -37,8 +37,6 @@ if(!$ajax):
 	function load_assets() {
 
 		wp_enqueue_style('style', get_template_directory_uri().'/css/style.css');
-		wp_register_style('fancybox', get_template_directory_uri().'/css/jquery.fancybox.css');
-
 		wp_enqueue_script('modernizr', get_template_directory_uri().'/js/libs/modernizr.min.js');
 		wp_enqueue_script('jquery', get_template_directory_uri().'/js/libs/jquery.min.js');
 		wp_enqueue_script('easing', get_template_directory_uri().'/js/plugins/jquery.easing.js', array('jquery'), '', true);
@@ -46,14 +44,10 @@ if(!$ajax):
 		wp_enqueue_script('actual', get_template_directory_uri().'/js/plugins/jquery.actual.js', array('jquery'), '', true);
 		wp_enqueue_script('imagesloaded', get_template_directory_uri().'/js/plugins/jquery.imagesloaded.js', array('jquery'), '', true);
 		wp_enqueue_script('transit', get_template_directory_uri().'/js/plugins/jquery.transit.js', array('jquery'), '', true);
-		wp_register_script('fancybox', get_template_directory_uri().'/js/plugins/jquery.fancybox.min.js', array('jquery'), '', true);
 		wp_deregister_script('accordion');
 		wp_register_script('accordion', get_template_directory_uri().'/js/plugins/jquery.accordion.js', array('jquery'), '', true);
 		wp_enqueue_script('main', get_template_directory_uri().'/js/main.js', array('jquery'), '', true);
-		wp_register_script('youtube', 'http://www.youtube.com/player_api', false, '', true);
-
-		wp_deregister_script('wc-add-to-cart-variation');
-		wp_register_script('wc-add-to-cart-variation', get_template_directory_uri().'/js/plugins/jquery.add-to-cart-variation.js', array( 'jquery' ), '', true );
+		wp_register_script('youtube', '//www.youtube.com/player_api', false, '', true);
 	}
 	add_action('wp_enqueue_scripts', 'load_assets');
 	wp_head();

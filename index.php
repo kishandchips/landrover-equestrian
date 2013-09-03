@@ -11,8 +11,10 @@
  * @since landrover 1.0
  */
 $lightbox = (isset($_GET['lightbox']) && $_GET['lightbox'] == true) ? true : false;
+$ajax = (isset($_GET['ajax']) && $_GET['ajax'] == true) ? true : false;
 get_header(); ?>
 <?php if(!$lightbox): ?>
+<?php if($ajax) : ?><button class="close-btn"></button><?php endif; ?>
 <div id="index">
 	<?php while ( have_posts() ) : the_post(); ?>
 	<div class="content" <?php post_class(); ?>>

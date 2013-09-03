@@ -25,9 +25,9 @@ query_posts( array_merge( $wp_query->query_vars, array( 'orderby' => 'menu_order
 	<div class="episode">
 		<div class="inner container" style="background: url(<?php echo $image[0]; ?>);">
 			<div class="content">
-				<h2 class="title"><?php the_title(); ?></h2> 
+				<h2 class="title"><?php if(get_field('rider_title')): ?><span class="orange"><?php the_field('rider_title') ?></span><br /><?php endif; ?><?php the_title(); ?></h2> 
 				<h6 class="sub-title"><?php the_field('sub_title'); ?></h6>
-				<p><a href="<?php the_permalink(); ?>" class="white-btn"><?php _e("Play this episode", THEME_NAME); ?></a>
+				<p><a href="<?php the_permalink(); ?>" class="white-btn"><?php _e("Watch this film", THEME_NAME); ?></a>
 			</div>
 			<div class="overlay"></div>
 		</div>

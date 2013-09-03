@@ -59,7 +59,7 @@
 					<?php while (has_sub_field('items', $id)) : ?>
 					<?php $bg_image = get_sub_field('background_image'); ?>
 					<?php $ajax_page = get_sub_field('ajax_page', $id); ?>
-					<li class="item <?php if($i == 0) echo 'current'; ?> <?php if($ajax_page) echo 'ajax-btn'; ?>" href="<?php echo get_permalink($ajax_page->ID); ?>" style="background-image: url(<?php echo $bg_image['sizes']['accordion']; ?>);">
+					<li class="item <?php if($i == 0) echo 'current'; ?> <?php if($ajax_page) echo 'ajax-btn'; ?>" href="<?php echo get_permalink($ajax_page->ID); ?>" style="background-color: #000; background-image: url(<?php echo $bg_image['sizes']['accordion']; ?>);">
 						<footer class="footer">
 							<button class="btn"><?php the_sub_field('title'); ?></button>
 						</footer>
@@ -76,7 +76,7 @@
 			<?php endif; ?>
 			<?php break; ?>
 		<?php case 'ajax_page':  ?>
-			<div id="ajax-page"></div>
+			<div id="ajax-page" class="<?php if(get_sub_field('show_close_button')) echo 'show-close-btn'; ?>"></div>
 			<?php break; ?>
 		<?php case 'episodes_scroller': 
 			$query = new WP_Query(array('post_type' => 'episode', 'posts_per_page' => -1, 'orderby' => 'menu_order', 'order' => 'ASC' )); 
@@ -91,9 +91,9 @@
 					    $image = wp_get_attachment_image_src( $image_id, 'custom_large' ); ?>
 						<div class="scroll-item" data-id="<?php the_ID(); ?>" style="background-image: url(<?php echo $image[0]; ?>);">
 							<div class="content">
-								<h2 class="episodes-title no-margin"><?php the_title(); ?></h2>
+								<h2 class="episodes-title no-margin"><?php if(get_field('rider_title')): ?><span class="orange"><?php the_field('rider_title') ?></span><br /><?php endif; ?><?php the_title(); ?></h2>
 								<p class="landrover-light uppercase sub-title"><?php the_field('sub_title'); ?></p>
-								<p><a href="<?php the_permalink(); ?>" class="white-btn"><?php _e("Play this episode", THEME_NAME); ?></a>
+								<p><a href="<?php the_permalink(); ?>" class="white-btn"><?php _e("Watch this film", THEME_NAME); ?></a>
 							</div>
 							<div class="overlay"></div>
 						</div>
@@ -128,7 +128,7 @@
 				<div class="container inner">
 					<header class="episodes-header text-center">
 						<h2 class="title text-center"><?php the_sub_field('title');?></h2>
-						<p class="landrover-light uppercase"><?php the_sub_field('sub_title'); ?></p>
+						<?php the_sub_field('content'); ?>
 					</header>
 					<ul class="episodes-list">
 						<?php while($query->have_posts()): $query->the_post(); ?>
@@ -146,14 +146,15 @@
 									<?php if($episode_date <= $now): ?>
 									<span class="play-btn"></span>
 									<?php endif; ?>
+									<div class="overlay"></div>
 								</div>
 								<header class="header episode-header">
-									<h5 class="landrover-medium episode-title no-margin"><?php the_title(); ?></h5>
-									<p class="tiny uppercase date no-margin">
+									<h6 class="landrover-medium episode-title no-margin"><?php if(get_field('rider_title')): ?><span class="orange"><?php the_field('rider_title') ?></span><br /><?php endif; ?><?php the_title(); ?></h6>
+									<p class="tiny uppercase date">
 									<?php if($episode_date >= $now): ?>
 									<?php _e("Coming", THEME_NAME); ?> <?php echo date('d F', $episode_date); ?></p>
 									<?php else: ?>
-									<?php _e("Play this Episode", THEME_NAME); ?>
+									<?php _e("Watch this film", THEME_NAME); ?>
 									<?php endif; ?>
 									</p>
 								</header>
@@ -187,7 +188,9 @@
 								</div>
 								<div class="content">
 									<button class="close-btn btn"></button>
-									<?php the_content(); ?>
+									<div class="inner">
+										<?php the_content(); ?>
+									</div>
 								</div>
 								<div class="overlay"></div>
 							</div>
@@ -209,7 +212,7 @@
 						<h2><?php the_sub_field('title'); ?></h2>
 						<p class="landrover-light"><?php the_sub_field('sub_title'); ?></p>
 					</header>
-					<div id="ajax-page"></div>
+					<div id="ajax-page" class="show-close-btn"></div>
 					<ul class="disciplines-list clearfix">
 						<?php while($query->have_posts()): $query->the_post(); ?>
 						<li class="span one-third item discipline">

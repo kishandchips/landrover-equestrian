@@ -143,21 +143,13 @@ class Custom_Post_Type
 						);
 
 						// Add the taxonomy to the post type
-						add_action( 'init',
-							function() use( $taxonomy_name, $post_type_name, $args )
-							{						
-								register_taxonomy( $taxonomy_name, $post_type_name, $args );
-							}
-						);
+						register_taxonomy( $taxonomy_name, $post_type_name, $args );
 					}
 					else
 					{
-						add_action( 'init',
-							function() use( $taxonomy_name, $post_type_name )
-							{				
-								register_taxonomy_for_object_type( $taxonomy_name, $post_type_name );
-							}
-						);
+									
+						register_taxonomy_for_object_type( $taxonomy_name, $post_type_name );
+						
 					}
 			}
 		}	

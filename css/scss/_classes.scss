@@ -120,6 +120,7 @@ p {
 
 p.small {
 //	margin: 4px 0;
+	line-height: 1.5;
 }
 
 .tiny {
@@ -527,12 +528,14 @@ hr {
 }
 
 .overlay {
-	width:100%;
-	height: 100%;
+	// width:100%;
+	// height: 100%;
 	position: absolute;
 	z-index: 100;
 	top: 0;
 	left: 0;
+	right: 0;
+	bottom: 0;
 	background: rgba(#000, 0.4);
 	@include transition(all 0.6s ease);
 
@@ -675,7 +678,7 @@ hr {
 	@include box-shadow(0 5px 8px -3px rgba(#000, 0.5));
 	@include filter-gradient(#f3f3f3, #d5d5d5);
 	@include background(linear-gradient(#f3f3f3, #d5d5d5));
-	padding: 1.4em 0;	
+	padding: 1.4em 0 1em 0;	
 }
 
 .accordion {
@@ -705,6 +708,7 @@ hr {
 				width: 142px;
 				// -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.00000000, M12=1.00000000, M21=-1.00000000, M22=0.00000000, sizingMethod='auto expand')";
 				// filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.00000000, M12=1.00000000, M21=-1.00000000, M22=0.00000000, sizingMethod='auto expand');
+				filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 				@include transform3d(rotate(-90deg) translateX(-50%) translate3d( 0, 0, 0));
 				@include border-radius(3px 3px 0 0);
 				color: #e05206;
@@ -715,6 +719,10 @@ hr {
 				opacity: 0;
 				z-index: 500;
 				line-height: 1.2;
+				.lt-ie10 & {
+					-ms-transform:rotate(-90deg);
+				}
+
 				.no-csstransforms & {
 					display: none;
 				}
@@ -767,10 +775,10 @@ hr {
 			position: absolute;
 			z-index: 400;
 			left: 0;
-			padding: 1em 2em;
+			padding: 1.4em 2em 1em 2em;
 			top: 50%;
 			margin-top: -3em;
-			width: 30em;
+			width: auto;
 		 	@include transition(all 0.5s ease);
 
 			.csstransforms & {
@@ -902,17 +910,23 @@ hr {
 
 			.content {
 				color: #333;
-				padding: 1em 1.5em;
 				position: relative;
 				width: 300px;
 				background: none;
 				margin-top: 0;
 				top: 0;
-				@include box-sizing(border-box);
-				overflow: scroll;
+				padding: 0;
 				height: 100%;
+
 				.csstransforms & {
 					@include translateY(0);
+				}
+
+				> .inner {
+					padding: 0 3em 0 1em;
+					overflow-y: scroll;
+					height: 100%;
+
 				}
 			}
 
@@ -922,6 +936,7 @@ hr {
 				top: 1em;
 				width: auto;
 				height: auto;
+				padding: 0.6em 0.8em;
 			}
 
 			.overlay {
@@ -1121,11 +1136,11 @@ hr {
 
 .episodes {
 	> .inner {
-		padding: 0 0 2em 0;
+		padding: 0 0 1em 0;
 	}
 
 	.episodes-header {
-		padding: 2em 3em 1em 3em;
+		padding: 2em 10em 1em 10em;
 	}
 
 	.episodes-list {
@@ -1156,10 +1171,9 @@ hr {
 					color: #df5206;
 
 					.featured-image {
-						img {
-
-							@include transition(all 0.3s ease);
+						.overlay {
 							@include opacity(1);
+							visibility: visible;
 						}
 					}
 				}
@@ -1170,15 +1184,23 @@ hr {
 				position: relative;
 				.play-btn {
 					@include transition(all 0.3s ease);
+					@include opacity(0);
 					position: absolute;
 					top: 50%;
 					left: 50%;
 					margin-left: -16px;
 					margin-top: -16px;
+					z-index: 400;
 				}
 
-				img {
-					@include opacity(0.6);
+				.overlay {
+					z-index: 300;
+					position: absolute;
+					@include transition(all 0.3s ease);
+					@include opacity(0);
+					background: none;
+					border-bottom: 2px solid #e05206;
+					visibility: hidden;
 				}
 
 				&:hover {
@@ -1190,6 +1212,14 @@ hr {
 
 			.episode-header {
 				padding: 1.5em 0 0 0;
+				margin: 0 -0.6em;
+
+				.episode-title {
+					@include font-size(15);
+				}
+				.date {
+					margin: 0.4em 0;
+				}
 			}
 
 
@@ -1306,7 +1336,7 @@ hr {
 }
 
 .notification {
-	margin: 0.5em 0;
+	margin: 0.3em 0 0.5em 0;
 
 	.gform_heading,
 	.gform_body,
@@ -1316,6 +1346,11 @@ hr {
 
 	.gform_heading {
 		margin-bottom: 0.6em !important;
+
+		.gform_description {
+			line-height: 1.4;
+			display: inline-block;
+		}
 	}
 }
 /* =============================================================================

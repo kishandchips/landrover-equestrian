@@ -3,7 +3,7 @@
 	font-family: "LandRover";
 	src: url('fonts/landrover_light.eot');
 	src: url('fonts/landrover_light.eot?#iefix') format('eot'), url('fonts/landrover_light.woff') format('woff'), url('fonts/landrover_light.ttf') format('truetype'), url('fonts/landrover_light.svg') format('svg');
-	font-weight: 300;
+	font-weight: 400;
 	font-style: normal;
 }
 
@@ -11,7 +11,7 @@
     @font-face {
         font-family: 'LandRover';
         src: url('fonts/landrover_light.svg') format('svg');
-        font-weight: 300;
+        font-weight: 400;
 		font-style: normal;
     }
 }
@@ -47,6 +47,7 @@
 	font-family: 'LandRover', Arial, Helvetica, sans-serif;
 	font-style: normal;
 	font-weight: 300;
+	-webkit-font-smoothing: none;
 	@include translate3d(0, 0, 0);
 }
 	
