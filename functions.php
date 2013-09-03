@@ -257,7 +257,6 @@ function get_the_adjacent_fukn_post($adjacent, $post_type = 'post', $category = 
 		'category__in' => $category,
 		'post_parent' => $post_parent
 	);
-	
 	$curr_post = $post;
 	$new_post = NULL;
 	$custom_query = new WP_Query($args);
@@ -270,7 +269,7 @@ function get_the_adjacent_fukn_post($adjacent, $post_type = 'post', $category = 
 				$new_i = ($i + 1 >= $total_posts) ? 0 : $i + 1; 
 				$new_post = $posts[$new_i];	
 			} else {
-				$new_i = ($i - 1 <= 0) ? $total_posts - 1 : $i - 1; 
+				$new_i = ($i - 1 < 0) ? $total_posts - 1 : $i - 1; 
 				$new_post = $posts[$new_i];	
 			}
 			break;	
