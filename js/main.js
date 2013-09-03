@@ -222,9 +222,19 @@
 				});
 
 				$('.share-btn').on('click', function(){
+					var url = $(this).data('url'),
+						name = $(this).data('name'),
+						image = $(this).data('image'),
+						caption = $(this).data('caption'),
+						description = $(this).data('description');
+						
 					FB.ui({
 						method: 'feed',
-						link: window.location.href,
+						link: url,
+						name: name,
+						description: description,
+						picture: image,
+						caption: caption
 					}, function(response){
 
 					});

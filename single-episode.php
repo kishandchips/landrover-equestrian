@@ -18,11 +18,14 @@ wp_enqueue_script('youtube');
 <div id="single-episode">
 	<?php while ( have_posts() ) : the_post(); ?>
 	<?php 
+	$image_id = get_post_thumbnail_id($post->ID);
 	$episode_date = strtotime(get_field('episode_date'));
     $now = strtotime('now');
+	$episodes_page = get_field('episodes_page', 'options');
     ?>
 	<div class="container">
 		<header class="episode-header">
+			
 			<h2 class="no-margin title text-center">
 				<?php if(get_field('rider_title')): ?><span class="orange"><?php the_field('rider_title') ?> </span> - <?php endif; ?>
 				<?php the_title(); ?>
@@ -56,15 +59,16 @@ wp_enqueue_script('youtube');
 					<h6 class="white episode-date"><?php echo date('d F Y', $episode_date); ?></h6>
 				</div>
 				<div class="featured-image">
-					<?php 
-					$image_id = get_post_thumbnail_id($post->ID);
-				    $image = wp_get_attachment_image_src( $image_id, 'custom_medium' ); ?>
+					<?php $image = wp_get_attachment_image_src( $image_id, 'custom_medium' ); ?>
 					<img src="<?php echo $image[0]; ?>" alt="<?php the_title(); ?>" class="scale"/>
 					<div class="overlay"></div>
 				</div>
 				
 			</div>
 			<?php endif; ?>
+			<div class="back">
+				<a href="<?php echo get_permalink($episodes_page->ID); ?>" class="white-btn btn">See all films</a>
+			</div>
 		</div>
 
 		<div id="content" <?php post_class('clearfix'); ?>>
@@ -77,7 +81,9 @@ wp_enqueue_script('youtube');
 				<?php else: ?>
 					<p class="bold"><?php _e("This episode will premiere on"); ?> <?php echo date('d/m/Y', $episode_date) ?></p>
 				<?php endif; ?>
-
+				</div>
+				
+				<div class="like">
 					<div class="fb-like" data-href="<?php the_permalink(); ?>" data-width="450" data-show-faces="true" data-send="false"></div>
 				</div>
 				<div class="comments">
@@ -89,8 +95,10 @@ wp_enqueue_script('youtube');
 		
 				<?php if($episode_date < $now): ?>
 				<div class="share">
-					<h5 class="orange uppercase no-margin landrover-medium"><?php _e("Share this episode", THEME_NAME); ?></h5>
-					<p><a class="share-btn white-btn"><?php _e("Post to timeline", THEME_NAME);?></a></p>
+					<h5 class="orange uppercase no-margin landrover-medium"><?php _e("Share this film", THEME_NAME); ?></h5>
+					<?php $thumbnail = wp_get_attachment_image_src( $image_id, 'thumbnail' ); ?>
+					<p><a class="share-btn white-btn" data-url="https://apps.facebook.com/landrover-equestrian/<?php echo get_page_uri($episodes_page->ID).'/'.get_page_uri($post->ID); ?>/" data-description="<?php the_field('sub_title'); ?>" data-image="<?php echo $thumbnail[0] ?>" data-name="<?php if(get_field('rider_title')) echo get_field('rider_title'). ' - '; ?><?php the_title(); ?>"><?php _e("Post to timeline", THEME_NAME);?></a></p>
+					<!--p><a class="share-btn white-btn" data-url="https://apps.facebook.com/landrover-equestrian/<?php echo get_page_uri(the_ID()); ?>"><?php _e("Post to timeline", THEME_NAME);?></a></p-->
 				</div>
 				<?php endif; ?>
 				<div class="notify">

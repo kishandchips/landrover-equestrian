@@ -7,6 +7,7 @@
  * @package landrover
  * @since landrover 1.0
  */
+global $post;
 $ajax = (isset($_GET['ajax']) && $_GET['ajax'] == true) ? true : false;
 if(!$ajax):
 ?>
@@ -25,6 +26,10 @@ if(!$ajax):
     <script type="text/javascript">
 		var themeUrl = '<?php bloginfo( 'template_url' ); ?>';
 		var baseUrl = '<?php bloginfo( 'url' ); ?>';
+		var url = (window.location != window.parent.location) ? document.referrer: document.location;
+		if(url.indexOf('apps.facebook.com') >= 0){
+			window.top.location = 'https://www.facebook.com/landrover/app_579639135402354?app_data=<?php echo $post->ID; ?>';
+		}
 	</script>
     <?php
 

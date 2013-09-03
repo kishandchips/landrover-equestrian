@@ -12,6 +12,18 @@
  * @since landrover 1.0
  */
 
+if(isset($_REQUEST['signed_request'])){
+	$signed_request_ary = explode('.',$_REQUEST['signed_request']);
+	$json_data = base64_decode($signed_request_ary[1]);
+	$signed_request = json_decode($json_data, true);
+	
+	if(isset($signed_request['app_data'])){
+		$app_data = $signed_request['app_data'];
+		$redirect_url = home_url().'?p='.$app_data;
+		wp_redirect( $redirect_url, 301 );
+	}
+}
+
 define('THEME_NAME', 'landrover');
 
 if ( ! function_exists( 'landrover_setup' ) ):

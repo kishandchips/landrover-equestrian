@@ -126,10 +126,12 @@
 			?>
 			<div class="episodes" style="<?php the_sub_field('css');?>">
 				<div class="container inner">
+					<?php if(get_sub_field('title') || get_sub_field('content')): ?>
 					<header class="episodes-header text-center">
 						<h2 class="title text-center"><?php the_sub_field('title');?></h2>
 						<?php the_sub_field('content'); ?>
 					</header>
+					<?php endif; ?>
 					<ul class="episodes-list">
 						<?php while($query->have_posts()): $query->the_post(); ?>
 						<?php 
