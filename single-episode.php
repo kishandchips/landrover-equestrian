@@ -22,6 +22,7 @@ wp_enqueue_script('youtube');
 	$episode_date = strtotime(get_field('episode_date'));
     $now = strtotime('now');
 	$episodes_page = get_field('episodes_page', 'options');
+	$about_page = get_field('about_page', 'options');
     ?>
 	<div class="container">
 		<header class="episode-header">
@@ -81,8 +82,8 @@ wp_enqueue_script('youtube');
 				<?php else: ?>
 					<p class="bold"><?php _e("This episode will premiere on"); ?> <?php echo date('d/m/Y', $episode_date) ?></p>
 				<?php endif; ?>
+					<p><a href="<?php echo get_permalink($about_page->ID); ?>">&laquo; <?php _e("Find out more about this rider", THEME_NAME); ?></a></p>
 				</div>
-				
 				<div class="like">
 					<div class="fb-like" data-href="<?php the_permalink(); ?>" data-width="450" data-show-faces="true" data-send="false"></div>
 				</div>
