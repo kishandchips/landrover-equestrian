@@ -82,7 +82,7 @@ wp_enqueue_script('youtube');
 				<?php else: ?>
 					<p class="bold"><?php _e("This episode will premiere on"); ?> <?php echo date('d/m/Y', $episode_date) ?></p>
 				<?php endif; ?>
-					<p><a href="<?php echo get_permalink($about_page->ID); ?>">&laquo; <?php _e("Find out more about this rider", THEME_NAME); ?></a></p>
+					<p><a href="<?php echo get_permalink($about_page->ID); ?>#riders">&laquo; <?php _e("Find out more about the riders", THEME_NAME); ?></a></p>
 				</div>
 				<div class="like">
 					<div class="fb-like" data-href="<?php the_permalink(); ?>" data-width="450" data-show-faces="true" data-send="false"></div>

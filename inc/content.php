@@ -174,7 +174,7 @@
 			if($query->have_posts()):
 				wp_enqueue_script('accordion');
 			?>
-			<div class="riders">
+			<div id="riders" class="riders">
 				<div class="inner container">
 					<header class="riders-header text-center">
 						<h2><?php the_sub_field('title'); ?></h2>
