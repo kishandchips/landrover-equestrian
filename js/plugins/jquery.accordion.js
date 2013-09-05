@@ -28,7 +28,8 @@
 			buildComplete: function () {}, /* Function called after the accordion is finished building. */
 			close: function () {}, /* Function called before the accordion is closed. */
 			closed: function () {}, /* Function called after the accordion is closed. */
-			errors: false /* Display accordion specific errors. */
+			errors: false, /* Display accordion specific errors. */
+			isAnimating: false /* Display accordion specific errors. */
 		}, helpers = {
 			displayError: function (msg, e) {
 				if (window.console && e) {
@@ -350,7 +351,8 @@
 							/* Set up the listener to change slides when triggered. */
 							obj.children().bind(o.trigger, function () {
 								/* Don't do anything if the slide is already open. */
-								if ($(this).index() !== obj.data("current")) {
+								if ($(this).index() !== obj.data("current") && !o.isAnimating) {
+									o.isAnimating = true;
 									var i, j, p, c; /* p and c are 1-indexes */
 									p = previous + 1; /* Using the 1-index for nth selector. */
 									c = obj.data("current") + 1; /* Using the 1-index for nth selector. */
@@ -415,6 +417,10 @@
 											}
 										}
 									}
+
+									setTimeout(function(){	
+										o.isAnimating = false;
+									}, o.speed);
 									return false; /* This is important. If a visible link is clicked within the slide, it will open the slide instead of redirecting the link. */
 								}
 							});
@@ -436,59 +442,66 @@
 
 				obj.children().each(function (childindex) {
 					var zindex, xpos, y;
-					xpos = o.invert ? xpos = ((size - 1) * o.tabWidth) - (childindex * o.tabWidth) : childindex * o.tabWidth; /* Used for the position of each slide. */
-					originals[childindex] = xpos; /* px position of each open slide. */
-					$(this).removeClass(o.slideOpenClass);
-					o.close();
-					if (obj.data("auto")) {
-						if (o.invert) {
-							$(this).animate({ "right": xpos + o.widthUnits}, o.speed, o.easing);
+					if(!o.isAnimating){
+						xpos = o.invert ? xpos = ((size - 1) * o.tabWidth) - (childindex * o.tabWidth) : childindex * o.tabWidth; /* Used for the position of each slide. */
+						originals[childindex] = xpos; /* px position of each open slide. */
+						$(this).removeClass(o.slideOpenClass);
+						o.close();
+						
+						if (obj.data("auto")) {
+							if (o.invert) {
+								$(this).animate({ "right": xpos + o.widthUnits}, o.speed, o.easing);
+							} else {
+								$(this).animate({ "left": xpos + o.widthUnits}, o.speed, o.easing);
+							}
+
+							if (childindex === (o.startingSlide)) {
+								$(this).animate("cursor", "default");
+								if (o.slideClass !== null) {
+									$(this).addClass(o.slideOpenClass);
+								}
+							} else {
+								$(this).animate("cursor", "pointer");
+								if (o.slideClass !== null) {
+									$(this).addClass(o.slideClosedClass);
+								}
+								if ((childindex > (o.startingSlide)) && (!o.invert)) {
+									y = childindex + 1;
+									obj.children(childtag + ":nth-child(" + y + ")").animate({
+										left: originals[y - 1] + animate + o.widthUnits
+									}, o.speed, o.easing);
+								} else if ((childindex < (o.startingSlide)) && (o.invert)) {
+									y = childindex + 1;
+									obj.children(childtag + ":nth-child(" + y + ")").animate({
+										right: originals[y - 1] + animate + o.widthUnits
+									}, o.speed, o.easing);
+								}
+							}
 						} else {
-							$(this).animate({ "left": xpos + o.widthUnits}, o.speed, o.easing);
+							$(this).animate('cursor', 'pointer');
+							//$(this).addClass(o.slideClosedClass);
+							if (o.invert) {
+								$(this).animate({ "right": childindex * (o.width / size)}, o.speed, o.easing);
+							} else {
+								$(this).animate({ "left": childindex * (o.width / size)}, o.speed, o.easing);
+							}
 						}
 
-						if (childindex === (o.startingSlide)) {
-							$(this).animate("cursor", "default");
-							if (o.slideClass !== null) {
-								$(this).addClass(o.slideOpenClass);
-							}
-						} else {
-							$(this).animate("cursor", "pointer");
-							if (o.slideClass !== null) {
-								$(this).addClass(o.slideClosedClass);
-							}
-							if ((childindex > (o.startingSlide)) && (!o.invert)) {
-								y = childindex + 1;
-								obj.children(childtag + ":nth-child(" + y + ")").animate({
-									left: originals[y - 1] + animate + o.widthUnits
-								}, o.speed, o.easing);
-							} else if ((childindex < (o.startingSlide)) && (o.invert)) {
-								y = childindex + 1;
-								obj.children(childtag + ":nth-child(" + y + ")").animate({
-									right: originals[y - 1] + animate + o.widthUnits
-								}, o.speed, o.easing);
-							}
-						}
-					} else {
-						$(this).animate('cursor', 'pointer');
-						//$(this).addClass(o.slideClosedClass);
-						if (o.invert) {
-							$(this).animate({ "right": childindex * (o.width / size)}, o.speed, o.easing);
-						} else {
-							$(this).animate({ "left": childindex * (o.width / size)}, o.speed, o.easing);
-						}
+						//o.isAnimating = true; 
+						
+						
+						setTimeout(function(){	
+							o.closed();
+							obj.data("current", null);
+						}, o.speed + 500);
+
+
 					}
-
-					setTimeout(function(){	
-						o.closed();
-						obj.data("current", null);
-					}, o.speed + 500);
-					
-					
 					
 					
 				});
 			},
+
 			stop: function () { /* This will stop the accordion unless the slides are clicked, however, it will not resume the autoplay. */
 				if ($(this).data("auto")) {
 					clearTimeout($(this).data("interval"));

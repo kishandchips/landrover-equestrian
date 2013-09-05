@@ -38,7 +38,6 @@
 
 		loaded: function(){
 			$('body').addClass('loaded');
-			FB.Canvas.setAutoGrow();
 			FB.Canvas.setSize( {height: $(window).height()});
 			this.equalHeight();
 		},
@@ -238,7 +237,9 @@
 					}, function(response){
 
 					});
-				})
+				});
+
+				FB.Canvas.setAutoGrow();
 
 				main.competition.init();
 				main.notification.init();
@@ -258,6 +259,10 @@
 					callback(authorized);
 				});
 			},
+
+			setCanvasHeight: function(){
+				FB.Canvas.setSize( {height: $(window).height()});
+			}
 		},
 
 		competition: {
@@ -550,12 +555,14 @@
 											container.css({'height': 'auto'});
 											content.fadeIn();
 											container.slideDown('slow');
+											main.facebook.setCanvasHeight();
 										});
 									});
 								} else {
 									container.animate({'height': content.actual('height')}, function(){
 										container.css({'height': 'auto'});
 										content.fadeIn();
+										main.facebook.setCanvasHeight();
 									});
 								}	
 							});
@@ -574,6 +581,7 @@
 								container.animate({'height': content.actual('height')}, function(){
 									content.fadeTo(300, 1);
 									container.css({'height': 'auto'});
+									main.facebook.setCanvasHeight();
 								});
 							});
 						});
