@@ -1519,7 +1519,8 @@ input[type=submit] {
 	color: #e05206;
 	background: #FFF; 
 	line-height: 1;
-	@include box-shadow(0 0 1px 0 rgba(#000, 0.8));
+	//@include box-shadow(0 0 1px 0 rgba(#000, 0.8));
+	border: 1px solid #DDD;
 	@include font-size(10);
 	font-weight: bold;
 	text-transform: uppercase;
