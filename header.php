@@ -28,7 +28,7 @@ if(!$ajax):
 		var baseUrl = '<?php bloginfo( 'url' ); ?>';
 		var url = (window.location != window.parent.location) ? document.referrer: document.location;
 		if(url.indexOf('apps.facebook.com') >= 0){
-			window.top.location = 'https://www.facebook.com/landrover/app_579639135402354?app_data=<?php echo $post->ID; ?>';
+			window.top.location = 'https://www.facebook.com/landrover.uk/app_579639135402354?app_data=<?php echo $post->ID; ?>';
 		}
 	</script>
     <?php
