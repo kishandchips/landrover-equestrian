@@ -54,7 +54,7 @@ if(!$ajax):
 		wp_deregister_script('accordion');
 		wp_register_script('accordion', get_template_directory_uri().'/js/plugins/jquery.accordion.js', array('jquery'), '', true);
 		wp_enqueue_script('main', get_template_directory_uri().'/js/main.js', array('jquery'), '', true);
-		wp_register_script('youtube', '//www.youtube.com/player_api', false, '', true);		
+		wp_register_script('youtube', '//www.youtube.com/player_api', false, '', false);		
 	}
 	add_action('wp_enqueue_scripts', 'load_assets');
 	wp_head();

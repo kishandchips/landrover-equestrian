@@ -38,7 +38,6 @@
 
 		loaded: function(){
 			$('body').addClass('loaded');
-			FB.Canvas.setSize( {height: $(window).height()});
 			this.equalHeight();
 		},
 
@@ -238,7 +237,6 @@
 
 					});
 				});
-
 				FB.Canvas.setAutoGrow();
 
 				main.competition.init();
@@ -258,10 +256,6 @@
 
 					callback(authorized);
 				});
-			},
-
-			setCanvasHeight: function(){
-				FB.Canvas.setSize( {height: $(window).height()});
 			}
 		},
 
@@ -483,21 +477,22 @@
 				
 
 				if(video.length > 0){
+					$.getScript('//www.youtube.com/player_api', function(){
+						FB.getLoginStatus(function(loginResponse) {
+							if (loginResponse.status === 'connected') {
+								main.facebook.checkPermissions(main.notification.permissions, function(authorized){
+									main.youtube.authorized = authorized;
+								});
+							}
+						});
 
-					FB.getLoginStatus(function(loginResponse) {
-						if (loginResponse.status === 'connected') {
-							main.facebook.checkPermissions(main.notification.permissions, function(authorized){
-								main.youtube.authorized = authorized;
-							});
-						}
-					});
-
-					main.youtube.player = new YT.Player('youtube-video', {
-						videoId: video.data('video-id'),
-						events: {
-							'onReady': main.youtube.onPlayerReady,
-							'onStateChange': main.youtube.onPlayerStateChange
-						}
+						main.youtube.player = new YT.Player('youtube-video', {
+							videoId: video.data('video-id'),
+							events: {
+								'onReady': main.youtube.onPlayerReady,
+								'onStateChange': main.youtube.onPlayerStateChange
+							}
+						});
 					});
 				}
 			},
