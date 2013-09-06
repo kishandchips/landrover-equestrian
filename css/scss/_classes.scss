@@ -1440,8 +1440,8 @@ input[type=submit] {
 	position: relative;
 	font-weight: bold;
 	text-transform: uppercase;
-	@include box-shadow(0 0 1px 0 rgba(#000, 0.8));
-	border: none;
+	//@include box-shadow(0 0 1px 0 rgba(#000, 0.8));
+	border: 1px solid #ddd;
 	&:before {
 		@extend [data-icon]:before;
 		@extend .icon-arrow-right-small:before;
@@ -1468,6 +1468,7 @@ input[type=submit] {
 	&:hover {
 		background: #000;
 		color: #FFF;
+		border: 1px solid #000;
 
 		&:after {
 			background: #28303c;
