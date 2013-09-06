@@ -231,6 +231,14 @@ body {
 	}
 }
 
+body.page-home {
+	#ajax-page {
+	   min-height: 295px; 
+	   height:auto !important; 
+	   height: 295px;	
+	}
+}
+
 
 #lightbox {
 	position: absolute;
