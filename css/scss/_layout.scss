@@ -353,6 +353,8 @@ body.page-home {
 			bottom: -27px;
 			left: 0;
 			text-align: center;
+			@include transform(translate3d(0, 0, 50px));
+
 
 			> .btn {
 				@include border-radius(0 0 3px 3px);
