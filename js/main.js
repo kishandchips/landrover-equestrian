@@ -38,7 +38,6 @@
 
 		loaded: function(){
 			$('body').addClass('loaded');
-			FB.Canvas.setSize( {height: $(window).height()});
 			this.equalHeight();
 		},
 
@@ -238,7 +237,6 @@
 
 					});
 				});
-
 				FB.Canvas.setAutoGrow();
 
 				main.competition.init();
@@ -258,10 +256,6 @@
 
 					callback(authorized);
 				});
-			},
-
-			setCanvasHeight: function(){
-				FB.Canvas.setSize( {height: $(window).height()});
 			}
 		},
 
