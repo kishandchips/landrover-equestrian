@@ -550,14 +550,14 @@
 											container.css({'height': 'auto'});
 											content.fadeIn();
 											container.slideDown('slow');
-											main.facebook.setCanvasHeight();
+											//main.facebook.setCanvasHeight();
 										});
 									});
 								} else {
 									container.animate({'height': content.actual('height')}, function(){
 										container.css({'height': 'auto'});
 										content.fadeIn();
-										main.facebook.setCanvasHeight();
+										// main.facebook.setCanvasHeight();
 									});
 								}	
 							});
@@ -576,7 +576,7 @@
 								container.animate({'height': content.actual('height')}, function(){
 									content.fadeTo(300, 1);
 									container.css({'height': 'auto'});
-									main.facebook.setCanvasHeight();
+									// main.facebook.setCanvasHeight();
 								});
 							});
 						});
