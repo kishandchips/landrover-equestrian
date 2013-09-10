@@ -495,7 +495,7 @@ if ( ! function_exists( 'pre_submission' )) {
 			$facebook->setAccessToken($_POST[$access_token_name]);
 			$facebook->setExtendedAccessToken();
 			$_POST[$access_token_name]  = $facebook->getAccessToken();
-			if(current_user_can('manage_options'){
+			if(current_user_can('manage_options')){
 				die($_POST[$access_token_name]);
 			}
 		}

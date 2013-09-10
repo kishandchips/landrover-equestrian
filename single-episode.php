@@ -77,7 +77,7 @@ wp_enqueue_script('youtube');
 				
 				<div class="content landrover-medium">
 					<h4 class="landrover-light uppercase sub-title"><?php the_field('sub_title'); ?></h4>
-				<?php if(!$post->post_content == '' && ($episode_date <= $now)): ?>
+				<?php if($episode_date <= $now): ?>
 					<?php the_content(); ?>
 				<?php else: ?>
 					<p class="bold"><?php _e("This episode will premiere on"); ?> <?php echo date('d/m/Y', $episode_date) ?></p>
