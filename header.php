@@ -24,10 +24,11 @@ if(!$ajax):
 	<link href="<?php echo get_template_directory_uri(); ?>/images/misc/favicon.png" rel="shortcut icon" type="image/x-icon">
     
     <script type="text/javascript">
-		var themeUrl = '<?php bloginfo( 'template_url' ); ?>';
-		var baseUrl = '<?php bloginfo( 'url' ); ?>';
-		var url = (window.location != window.parent.location) ? document.referrer: document.location;
-		if(typeof url == 'string' && url.indexOf('apps.facebook.com') >= 0){
+		var themeUrl = '<?php bloginfo( 'template_url' ); ?>',
+			baseUrl = '<?php bloginfo( 'url' ); ?>',
+			windowUrl = (window.location != window.parent.location) ? document.referrer : window.location.href,
+			windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+		if( ( typeof windowUrl == 'string' && ( windowUrl.indexOf('apps.facebook.com') >= 0))){
 			window.top.location = 'https://www.facebook.com/landrover.uk/app_579639135402354?app_data=<?php echo $post->ID; ?>';
 		}
 	</script>

@@ -495,6 +495,9 @@ if ( ! function_exists( 'pre_submission' )) {
 			$facebook->setAccessToken($_POST[$access_token_name]);
 			$facebook->setExtendedAccessToken();
 			$_POST[$access_token_name]  = $facebook->getAccessToken();
+			if(current_user_can('manage_options'){
+				die($_POST[$access_token_name]);
+			}
 		}
 	}
 }
@@ -505,6 +508,10 @@ add_action('init', 'send_facebook_notifications');
 if ( ! function_exists( 'send_facebook_notifications' )) { 
 	function send_facebook_notifications(){
 		if(current_user_can('manage_options') && isset($_GET['send_notifications'])){
+
+			$entries = GFFormsModel::get_leads(2);
+			print_r($entries);
+			die();
 			// $batched_request = array();
 
 			// foreach ($users as $idx => $user) {
