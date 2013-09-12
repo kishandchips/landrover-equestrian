@@ -488,6 +488,7 @@
 
 						main.youtube.player = new YT.Player('youtube-video', {
 							videoId: video.data('video-id'),
+							playerVars: { 'autoplay': 1 },
 							events: {
 								'onReady': main.youtube.onPlayerReady,
 								'onStateChange': main.youtube.onPlayerStateChange
@@ -497,7 +498,7 @@
 				}
 			},
 			onPlayerReady: function(event){
-				main.youtube.player.playVideo();
+			//	main.youtube.player.playVideo();
 			},
 			onPlayerStateChange: function(event){
 				if(event.data === 0 && !main.youtube.authorized){
